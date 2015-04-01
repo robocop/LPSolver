@@ -4,11 +4,11 @@ public class DictionaryEntryTest {
 
     @org.junit.Test
     public void testChange_variable() throws Exception {
-        DictionaryEntry equ1 = new DictionaryEntry(3, 2, 2);
+        DictionaryEntry equ1 = new DictionaryEntry(3, 5, 2);
         equ1.setConstant(5);
-        equ1.setConstants(new double[] {1, 2, 3});
-        equ1.setVariables(new int[] {0, 1, 3});
-        equ1.change_variable(1);
+        equ1.setConstants(new double[]{1, 2, 3});
+        equ1.setVariables(new int[]{0, 1, 3});
+        equ1.swap_variable(1);
 
         org.junit.Assert.assertEquals(1, equ1.getVariable());
         org.junit.Assert.assertEquals(-2.5, equ1.getConstant(), 0.01);
@@ -24,15 +24,15 @@ public class DictionaryEntryTest {
     @org.junit.Test
     public void testChangeVariableAndSubstitute() throws Exception {
         // x_3 = 5 - 2x_0 - 3x_1 -x_2
-        DictionaryEntry equ1 = new DictionaryEntry(3, 3, 3);
+        DictionaryEntry equ1 = new DictionaryEntry(3, 5, 3);
         equ1.setConstant(5);
         equ1.setConstants(new double[]{-2, -3, -1});
         equ1.setVariables(new int[]{0, 1, 2});
 
-        equ1.change_variable(0);
+        equ1.swap_variable(0);
 
         // x_4 = 11-4x_0-x_1 - 2x_2
-        DictionaryEntry equ2 = new DictionaryEntry(3, 3, 4);
+        DictionaryEntry equ2 = new DictionaryEntry(3, 6, 4);
         equ2.setConstant(11);
         equ2.setConstants(new double[]{-4, -1, -2});
         equ2.setVariables(new int[]{0, 1, 2});

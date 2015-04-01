@@ -6,7 +6,7 @@ public class LinearCombinationTest {
 
     @Test
     public void testGetIndexVariable() throws Exception {
-        LinearCombination equ1 = new LinearCombination(3, 2);
+        LinearCombination equ1 = new LinearCombination(3, 5);
         equ1.setConstant(5);
         equ1.setConstants(new double[]{1, 2, 3});
         equ1.setVariables(new int[]{0, 1, 3});
@@ -18,13 +18,13 @@ public class LinearCombinationTest {
     public void testSubstitute() throws Exception {
         //v_2 = 5.0  + 1.0 * v_0  + 2.0 * v_1  + 3.0 * v_3
 
-        LinearCombination equ1 = new DictionaryEntry(3, 2, 2);
+        LinearCombination equ1 = new DictionaryEntry(3, 5, 2);
         equ1.setConstant(5);
         equ1.setConstants(new double[]{1, 2, 3});
         equ1.setVariables(new int[]{0, 1, 3});
 
         //v_3 = 7.0  + 2.0 * v_0  + 1.0 * v_1  + 1.0 * v_4
-        DictionaryEntry equ2 = new DictionaryEntry(3, 2, 3);
+        DictionaryEntry equ2 = new DictionaryEntry(3, 5, 3);
         equ2.setConstant(7);
         equ2.setConstants(new double[]{2, 1, 1});
         equ2.setVariables(new int[]{0, 1, 4});

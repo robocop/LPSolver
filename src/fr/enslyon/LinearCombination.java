@@ -4,8 +4,8 @@ package fr.enslyon;
  * Created by quentin on 30/03/15.
  */
 public class LinearCombination {
-    protected int n; //number of free variables in the equation
-    protected int m; //the total number of variables is n+m
+    protected int numberOfTerms; //number of free variables in the equation
+    protected int maximumIndexVariables; //the total number of variables is maximumIndexVariables
 
     protected double constant = 0;
 
@@ -13,31 +13,37 @@ public class LinearCombination {
     protected int[] reverseVariables;
     protected double[] constantsLinearCombination;
 
-    LinearCombination(int n, int m) throws DictionaryEntryException {
-        if(n <= 0 || m <= 0) {
-            throw new DictionaryEntryException("the parameter n & m should be positive");
+    LinearCombination(int numberOfTerms, int maximumIndexVariables) throws LinearCombinationException {
+        if(numberOfTerms <= 0) {
+            throw new LinearCombinationException("the parameter numberOfTerms should be positive");
+        }
+        else if (numberOfTerms > maximumIndexVariables) {
+            throw new LinearCombinationException("the parameter maximumIndexVariables should be greater " +
+                    "than numberOfTerms");
         }
         else {
-            this.n = n;
-            this.m = m;
+            this.numberOfTerms = numberOfTerms;
+            this.maximumIndexVariables = maximumIndexVariables;
         }
     }
 
     public void setConstant(double constant) {
         this.constant = constant;
     }
-    public void setVariables(int[] variables) throws DictionaryEntryException {
-        if(variables.length != n) {
-            throw new DictionaryEntryException("the size of the array of the variables should be equal to n");
+    public void setVariables(int[] variables) throws LinearCombinationException {
+        if(variables.length != this.numberOfTerms) {
+            throw new LinearCombinationException("the size of the array of the variables should be equal to " +
+                    "numberOfTerms");
         }
         else {
             this.variablesLinearCombination = variables;
             this.buildReverseVariables();
         }
     }
-    public void setConstants(double[] constants) throws DictionaryEntryException {
-        if(constants.length != n) {
-            throw new DictionaryEntryException("the size of the array of the constants should be equal to n");
+    public void setConstants(double[] constants) throws LinearCombinationException {
+        if(constants.length != this.numberOfTerms) {
+            throw new LinearCombinationException("the size of the array of the constants should be equal to " +
+                    "numberOfTerms");
         }
         else {
             this.constantsLinearCombination = constants;
@@ -60,7 +66,7 @@ public class LinearCombination {
 
     public void print() {
         System.out.printf("%.01f ", this.constant);
-        for(int i = 0; i < n; i++) {
+        for(int i = 0; i < numberOfTerms; i++) {
             System.out.printf(" + %.01f * x_%d ",
                     this.constantsLinearCombination[i], this.variablesLinearCombination[i]);
         }
@@ -72,17 +78,17 @@ public class LinearCombination {
         //this.reverseVariables[v] = i with this.variablesLinearCombination[i] = v if i >= 0
         //this.reverseVariables[v] = -1 otherwise
 
-        this.reverseVariables = new int[this.n+this.m];
-        for(int v = 0; v < this.n + this.m; v++) {
+        this.reverseVariables = new int[this.maximumIndexVariables];
+        for(int v = 0; v < this.maximumIndexVariables; v++) {
             this.reverseVariables[v] = -1;
         }
 
-        for(int i = 0; i < this.n; i++) {
+        for(int i = 0; i < this.numberOfTerms; i++) {
             this.reverseVariables[this.variablesLinearCombination[i]] = i;
         }
     }
 
-    public void substitute(DictionaryEntry toSubstitute) throws DictionaryEntryException {
+    public void substitute(DictionaryEntry toSubstitute) throws LinearCombinationException {
         //We substitute all the occurrences of the variable of toSubstitute by the corresponding value in
         // this current object.
         //The corresponding value is:
@@ -93,14 +99,14 @@ public class LinearCombination {
         int currentIndexToSubstitute = this.getIndexVariable(toSubstitute.getVariable());
 
         if(currentIndexToSubstitute == -1) {
-            throw new DictionaryEntryException("The variable " + toSubstitute.getVariable() +
-                    "does not appears in the system. Impossible to substitute it");
+            throw new LinearCombinationException("The variable " + toSubstitute.getVariable() +
+                    "does not appears in the linear combination. Impossible to substitute it");
         }
         else {
             double cstSubstitution = this.constantsLinearCombination[currentIndexToSubstitute];
             this.constant += cstSubstitution * toSubstitute.getConstant();
 
-            for (int i = 0; i < this.n; i++) {
+            for (int i = 0; i < this.numberOfTerms; i++) {
                 //i is an index of toSubstitute
 
                 int v = toSubstitute.getVariablesLinearCombination()[i];

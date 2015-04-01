@@ -5,6 +5,6 @@ package fr.enslyon;
  */
 public class DictionaryEntryException extends Exception {
     public DictionaryEntryException(String msg) {
-        System.out.println("Error with a DictionaryEntry: " + msg);
+        System.err.println("Error with DictionaryEntry: " + msg);
     }
 }
