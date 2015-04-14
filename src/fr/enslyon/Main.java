@@ -46,8 +46,7 @@ public class Main {
             SimplexOutput solution = s.solve();
 
             solution.print();
-
-
+            
         }
         catch (DictionaryEntryException e) {
 
@@ -56,11 +55,6 @@ public class Main {
 
         }
 
-        //v_4 = 11.0  + -4.0 * v_0  + -1.0 * v_1  + -2.0 * v_2
-
-        //v_0 = 2.5  + -0.5 * v_3  + -1.5 * v_1  + -0.5 * v_2
-
-        // -> v_4 = 1.0  + 2.0 * v_3  + 5.0 * v_1  + 0.0 * v_2
 
 
     }

@@ -24,4 +24,8 @@ public class OptimalSolution implements SimplexOutput {
     public double getValue() {
         return value;
     }
+
+    public List<ResultVariable> getSolution() {
+        return this.solution;
+    }
 }
