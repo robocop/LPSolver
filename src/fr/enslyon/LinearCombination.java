@@ -43,8 +43,6 @@ public class LinearCombination {
         this.setConstants(constants);
     }
 
-
-
     public void setConstant(double constant) {
         this.constant = constant;
     }
@@ -146,13 +144,13 @@ public class LinearCombination {
 
 
 
-    public void print() {
-        System.out.printf("%.01f ", this.constant);
+    public String toString() {
+        String output = String.format("%.01f ", this.constant);
         for(int i = 0; i < numberOfTerms; i++) {
-            System.out.printf("+ %.2f * x_%d ",
+            output += String.format("+ %.2f * x_%d ",
                     this.constantsLinearCombination[i], this.variablesLinearCombination[i]);
         }
-        System.out.println();
+        return output;
     }
 
     private void buildReverseVariables() {

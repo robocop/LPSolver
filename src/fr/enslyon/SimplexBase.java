@@ -1,9 +1,7 @@
 package fr.enslyon;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by quentin on 24/03/15.
@@ -14,14 +12,13 @@ import java.util.Set;
  */
 
 public class SimplexBase {
-    protected LinearCombination objective;
-    protected DictionaryEntry[] dictionary;
-    private Set<Integer> initialVariables;
+    protected Dictionary dictionary;
 
-    SimplexBase(LinearCombination objective, DictionaryEntry[] dictionary) {
-        this.objective = objective;
-        this.dictionary = dictionary;
-        this.buildInitialVariables();
+    SimplexBase(LinearCombination objective, DictionaryEntry[] dictionaryEntries, Boolean debug) {
+        dictionary = new Dictionary(objective, dictionaryEntries, debug);
+    }
+    SimplexBase(LinearCombination objective, DictionaryEntry[] dictionaryEntries) {
+        this(objective, dictionaryEntries, false);
     }
 
     //If the simplex is already solved and lead to an optimal solution, return it.
@@ -29,12 +26,13 @@ public class SimplexBase {
         if (this.isOptimalSolution()) {
 
             List<ResultVariable> solution = new LinkedList<ResultVariable>();
-            for (int i = 0; i < this.dictionary.length; i++) {
-                if (initialVariables.contains(dictionary[i].getVariable())) {
-                    solution.add(new ResultVariable<Double>(dictionary[i].getVariable(), dictionary[i].getConstant()));
+            for (int j = 0; j < this.dictionary.length(); j++) {
+                if (this.dictionary.getInitialVariables().contains(dictionary.get(j).getVariable())) {
+                    solution.add(new ResultVariable<Double>(dictionary.get(j).getVariable(),
+                            dictionary.get(j).getConstant()));
                 }
             }
-            return new OptimalSolution(this.objective.getConstant(), solution);
+            return new OptimalSolution(this.dictionary.getObjective().getConstant(), solution);
         } else {
             throw new DictionaryEntryException("The l.p. is not in a state corresponding to an optimal solution");
         }
@@ -45,12 +43,12 @@ public class SimplexBase {
         int entering_variable = this.getVariableWithPositiveConstant();
         if (entering_variable >= 0 && this.isUnboundedSolution(entering_variable)) {
             List<ResultVariable<List<Double>>> solution = new LinkedList<ResultVariable<List<Double>>>();
-            for (int i = 0; i < this.dictionary.length; i++) {
-                int v = dictionary[i].getVariable();
-                double c = dictionary[i].getConstantsLinearCombination()
-                            [dictionary[i].getIndexVariable(entering_variable)];
+            for (int i = 0; i < this.dictionary.length(); i++) {
+                int v = dictionary.get(i).getVariable();
+                double c = dictionary.get(i).getConstantsLinearCombination()
+                            [dictionary.get(i).getIndexVariable(entering_variable)];
                 List<Double> values = new LinkedList<Double>();
-                values.add(dictionary[i].getConstant());
+                values.add(dictionary.get(i).getConstant());
                 values.add(c);
                 solution.add(new ResultVariable<List<Double>>(v, values));
             }
@@ -69,7 +67,7 @@ public class SimplexBase {
         while (!solved) {
             solved = step();
             if(!solved)
-                System.out.println("---End of the step---");
+                this.dictionary.print("---End of the step---\n");
         }
         if (this.isOptimalSolution())
             return this.getOptimalSolution();
@@ -80,7 +78,7 @@ public class SimplexBase {
 
     //Check if the simplex, in this current state corresponds to an optimal solution
     private Boolean isOptimalSolution() {
-        double[] z_constants = objective.getConstantsLinearCombination();
+        double[] z_constants = this.dictionary.getObjective().getConstantsLinearCombination();
         for(int i = 0; i < z_constants.length; i++) {
             if(z_constants[i] > 0) {
                 return false;
@@ -91,9 +89,9 @@ public class SimplexBase {
 
     //Check if the simplex, in this current state corresponds to an unbounded solution
     private Boolean isUnboundedSolution(int entering_variable) {
-        for(int i = 0; i < this.dictionary.length; i++) {
-            int index_entering_variable = dictionary[i].getIndexVariable(entering_variable);
-            if(dictionary[i].getConstantsLinearCombination()[index_entering_variable] < 0) {
+        for(int i = 0; i < this.dictionary.length(); i++) {
+            int index_entering_variable = dictionary.get(i).getIndexVariable(entering_variable);
+            if(dictionary.get(i).getConstantsLinearCombination()[index_entering_variable] < 0) {
                 return false;
             }
         }
@@ -107,64 +105,49 @@ public class SimplexBase {
         }
 
         int enteringVariable = this.getVariableWithPositiveConstant();
-        System.out.println("Entering variable: x_" + enteringVariable);
+        this.dictionary.print("Entering variable: x_" + enteringVariable + "\n");
 
         if (this.isUnboundedSolution(enteringVariable)) {
             return true;
         }
 
         int i_dict_leaving = this.getIndexDictionaryLeavingVariable(enteringVariable);
-        System.out.println("Dictionary leaving: " + i_dict_leaving);
-        System.out.println("Leaving variable: x_" + dictionary[i_dict_leaving].getVariable());
-        this.substituteEnteringVariable(enteringVariable, i_dict_leaving);
+
+        this.dictionary.print("Dictionary leaving: " + i_dict_leaving + "\n");
+        this.dictionary.print("Leaving variable: x_" + dictionary.get(i_dict_leaving).getVariable() + "\n");
+        this.pivot(enteringVariable, i_dict_leaving);
 
         return false;
     }
 
-    //Build the set of initial variables (the variables we want the values - e.g. not the slash variables).
-    private void buildInitialVariables() {
-        this.initialVariables = new HashSet<Integer>();
-        Set<Integer> slashVariables = new HashSet<Integer>();
-        for(int j = 0; j < this.dictionary.length; j++) {
-            slashVariables.add(this.dictionary[j].getVariable());
-        }
-        for(int v = 0; v < this.objective.getNumberOfTerms() + this.dictionary.length; v++) {
-            if(!slashVariables.contains(v)) {
-                this.initialVariables.add(v);
-            }
-        }
-    }
 
-
-    protected void printObjective() {
-        System.out.print("z = ");
-        this.objective.print();
-    }
-
-    // So the operation entering variable <-> leaving variable in the dictionary
+    // Do the operation entering variable <-> leaving variable in the dictionary
     // and in the objective
-    protected void substituteEnteringVariable(int entering_variable, int i_dict_leaving)
-            throws LinearCombinationException {
+    protected void pivot(int enteringVariable, int indexDictionaryLeaving) throws LinearCombinationException {
         //We permute the leading variable and the entering variable:
-        System.out.printf("Permuting x_%d and x_%d in %d\n", entering_variable, this.dictionary[i_dict_leaving].getVariable(), i_dict_leaving);
-        this.dictionary[i_dict_leaving].swap_variable(entering_variable);
-        this.dictionary[i_dict_leaving].print();
+        this.dictionary.print(
+                String.format("Permuting x_%d and x_%d in %d\n", enteringVariable,
+                    this.dictionary.get(indexDictionaryLeaving).getVariable(), indexDictionaryLeaving)
+        );
 
-        for(int i = 0; i < this.dictionary.length; i++) {
-            if(i != i_dict_leaving) {
-                this.dictionary[i].print();
-                this.dictionary[i].substitute(this.dictionary[i_dict_leaving]);
-                this.dictionary[i].print();
+        this.dictionary.get(indexDictionaryLeaving).swap_variable(enteringVariable);
+        this.dictionary.printDictionaryEntry(indexDictionaryLeaving);
+
+
+        for(int i = 0; i < this.dictionary.length(); i++) {
+            if(i != indexDictionaryLeaving) {
+                this.dictionary.get(i).substitute(this.dictionary.get(indexDictionaryLeaving));
+                this.dictionary.printDictionaryEntry(i);
             }
         }
-        this.objective.substitute(this.dictionary[i_dict_leaving]);
-        this.printObjective();
+        this.dictionary.getObjective().substitute(this.dictionary.get(indexDictionaryLeaving));
+        this.dictionary.printObjective();
     }
 
     //Check that all the constants are positives in the dictionary
     protected Boolean checkConstantsPositivity() {
-        for(int i = 0; i < this.dictionary.length; i++) {
-            if(dictionary[i].getConstant() < 0) {
+        for(int i = 0; i < this.dictionary.length(); i++) {
+            if(dictionary.get(i).getConstant() < 0) {
                 return false;
             }
         }
@@ -173,10 +156,10 @@ public class SimplexBase {
 
     //Find a variable for which the coefficient associated in the objective function is positive
     private int getVariableWithPositiveConstant() {
-        double[] z_constants = objective.getConstantsLinearCombination();
+        double[] z_constants = this.dictionary.getObjective().getConstantsLinearCombination();
         for(int i = 0; i < z_constants.length; i++) {
             if (z_constants[i] > 0) {
-                return objective.getVariablesLinearCombination()[i];
+                return this.dictionary.getObjective().getVariablesLinearCombination()[i];
             }
         }
         return -1;
@@ -187,11 +170,11 @@ public class SimplexBase {
 
     private int getIndexDictionaryLeavingVariable(int enteringVariable) {
         int index = -1; double ratio = 0;
-        for(int i = 0; i < this.dictionary.length; i++) {
-            int index_entering_variable = dictionary[i].getIndexVariable(enteringVariable);
-            double c = dictionary[i].getConstantsLinearCombination()[index_entering_variable];
+        for(int i = 0; i < this.dictionary.length(); i++) {
+            int index_entering_variable = dictionary.get(i).getIndexVariable(enteringVariable);
+            double c = dictionary.get(i).getConstantsLinearCombination()[index_entering_variable];
             if (c < 0) {
-                double new_ratio = dictionary[i].getConstant() / (-c);
+                double new_ratio = dictionary.get(i).getConstant() / (-c);
                 if (index == -1 || new_ratio < ratio) {
                     index = i;
                     ratio = new_ratio;

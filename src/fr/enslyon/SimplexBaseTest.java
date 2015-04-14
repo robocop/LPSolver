@@ -35,7 +35,6 @@ public class SimplexBaseTest {
         SimplexOutput solution = s.solve();
 
         org.junit.Assert.assertTrue(solution instanceof UnboundedSolution);
-        //solution.print();
 
     }
 

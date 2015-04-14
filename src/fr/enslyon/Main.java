@@ -35,18 +35,18 @@ public class Main {
 
 
 
-            objective.print();
-            equ1.print();
-            equ2.print();
-            equ3.print();
+            objective.toString();
+            equ1.toString();
+            equ2.toString();
+            equ3.toString();
 
             DictionaryEntry[] eqs = new DictionaryEntry[] {equ1, equ2, equ3};
 
-            Simplex s = new Simplex(objective, eqs);
+            Simplex s = new Simplex(objective, eqs, true);
             SimplexOutput solution = s.solve();
 
             solution.print();
-            
+
         }
         catch (DictionaryEntryException e) {
 

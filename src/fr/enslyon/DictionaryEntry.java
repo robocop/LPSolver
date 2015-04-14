@@ -24,9 +24,8 @@ public class DictionaryEntry extends LinearCombination {
         return variable;
     }
 
-    public void print() {
-        System.out.printf("x_%d = ", this.variable);
-        super.print();
+    public String toString() {
+        return String.format("x_%d = %s", this.variable, super.toString());
     }
 
     public void swap_variable(int variable) {

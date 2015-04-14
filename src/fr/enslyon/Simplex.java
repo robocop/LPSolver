@@ -6,14 +6,18 @@ package fr.enslyon;
  * Here is implemented the auxiliary l.p., the resolution and the projection of the dictionary.
  */
 public class Simplex extends SimplexBase {
-    Simplex(LinearCombination objective, DictionaryEntry[] dictionary) {
-        super(objective, dictionary);
+    Simplex(LinearCombination objective, DictionaryEntry[] dictionaryEntries) {
+        super(objective, dictionaryEntries);
     }
+    Simplex(LinearCombination objective, DictionaryEntry[] dictionaryEntries, Boolean debug) {
+        super(objective, dictionaryEntries, debug);
+    }
+
 
     public SimplexOutput solve() throws DictionaryEntryException, LinearCombinationException {
         if (!this.checkConstantsPositivity()) {
             //We do a copy of the objective before modifying it
-            LinearCombination previousObjective = new LinearCombination(this.objective);
+            LinearCombination previousObjective = new LinearCombination(this.dictionary.getObjective());
             int variableAdded = this.addNewVariablesSetToOne();
             SimplexOutput auxiliarySolution = this.solveAuxiliaryLP(variableAdded);
 
@@ -21,7 +25,6 @@ public class Simplex extends SimplexBase {
                 if(((OptimalSolution) auxiliarySolution).getValue() > 0.0001)
                     return new EmptyDomain();
                 else {
-                    auxiliarySolution.print();
                     this.dictionaryProjection(variableAdded, previousObjective);
                 }
             }
@@ -38,13 +41,10 @@ public class Simplex extends SimplexBase {
 
         this.newObjective();
 
-        System.out.println("New objective, new dictionary:");
-        for(int j = 0; j < this.dictionary.length; j++) {
-            dictionary[j].print();
-        }
-        objective.print();
+        this.dictionary.print("New objective, new dictionary:\n");
+        this.dictionary.printDictionary();
 
-        System.out.println("First illegal pivot:");
+        this.dictionary.print("First illegal pivot:\n");
         this.fistIllegalPivot(variableAdded);
 
         return this.solve();
@@ -59,10 +59,10 @@ public class Simplex extends SimplexBase {
     //Add a variable in each dictionary set to 1 (during the first phase of the simplex,
     // when we try to find a point in the domain)
     private int addNewVariablesSetToOne() throws DictionaryEntryException {
-        int v = this.objective.addVariable(-1);
-        System.out.println("Adding variable x_" + v);
-        for(int j = 0; j < this.dictionary.length; j++) {
-            int vj = this.dictionary[j].addVariable(1);
+        int v = this.dictionary.getObjective().addVariable(-1);
+        this.dictionary.print("Adding variable x_" + v + "\n");
+        for(int j = 0; j < this.dictionary.length(); j++) {
+            int vj = this.dictionary.get(j).addVariable(1);
             if(vj != v) {
                 throw new DictionaryEntryException("Dimension problem when trying to add a variable: "
                         + "the dictionary and the objective do not have the same dimension");
@@ -73,55 +73,47 @@ public class Simplex extends SimplexBase {
 
     // Set the new objective the z = -x_{n-1}
     private void newObjective() throws LinearCombinationException {
-        double[] newObjectiveConstants = new double[this.objective.getNumberOfTerms()];
+        double[] newObjectiveConstants = new double[this.dictionary.getObjective().getNumberOfTerms()];
         newObjectiveConstants[newObjectiveConstants.length-1] = -1;
-        objective.setConstants(newObjectiveConstants);
+        this.dictionary.getObjective().setConstants(newObjectiveConstants);
     }
 
     private void fistIllegalPivot(int v) throws LinearCombinationException {
         int i = 0;
-        double cst = dictionary[i].getConstant();
+        double cst = this.dictionary.get(i).getConstant();
 
-        for(int j = 1; j < this.dictionary.length; j++) {
-            if(dictionary[j].getConstant() < cst) {
+        for(int j = 1; j < this.dictionary.length(); j++) {
+            if(dictionary.get(j).getConstant() < cst) {
                 i = j;
-                cst = dictionary[j].getConstant();
+                cst = dictionary.get(j).getConstant();
             }
         }
-
-        this.substituteEnteringVariable(v, i);
-
+        this.pivot(v, i);
     }
 
     private void dictionaryProjection(int v, LinearCombination previousObjective) throws LinearCombinationException {
-        //We remove the variable added.
-        for(int j = 0; j < this.dictionary.length; j++) {
-            this.dictionary[j].removeVariable(v);
+        //We remove the variable added for each entry.
+        for(int j = 0; j < this.dictionary.length(); j++) {
+            this.dictionary.get(j).removeVariable(v);
         }
-        objective.removeVariable(v);
+        this.dictionary.getObjective().removeVariable(v);
+        this.dictionary.getObjective().setConstant(previousObjective.getConstant());
 
-        objective.setConstant(previousObjective.getConstant());
-
-        for(int i = 0; i < this.objective.getNumberOfTerms(); i++) {
+        for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
             int variable = previousObjective.getVariablesLinearCombination()[i];
             double scalar = previousObjective.getConstantsLinearCombination()[i];
-            LinearCombination l = new LinearCombination(this.dictionary[this.getIndexDictionary(variable)]);
+            LinearCombination l = new LinearCombination(this.dictionary.get(this.getIndexDictionary(variable)));
             l.scalarMultiplication(scalar);
-            objective.add(l);
-
+            this.dictionary.getObjective().add(l);
         }
 
-        System.out.println("New objective:");
-        this.printObjective();
-
-        for(int j = 0; j < this.dictionary.length; j++) {
-            this.dictionary[j].print();
-        }
+        this.dictionary.print("New objective:\n");
+        this.dictionary.printDictionary();
     }
 
     private int getIndexDictionary(int variable) {
-        for(int j = 0; j < this.dictionary.length; j++) {
-            if(this.dictionary[j].getVariable() == variable)
+        for(int j = 0; j < this.dictionary.length(); j++) {
+            if(this.dictionary.get(j).getVariable() == variable)
                 return j;
         }
         return -1;
