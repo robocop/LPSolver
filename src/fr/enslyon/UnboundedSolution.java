@@ -16,7 +16,7 @@ public class UnboundedSolution implements SimplexOutput {
     @Override
     public void print() {
         System.out.println("Unbounded solution");
-        System.out.printf("x_%d = t, t >=0\n", enteringVariable);
+        System.out.printf("x_%d = t, t>=0\n", enteringVariable);
         for(ResultVariable<List<Double>> v: this.solution) {
             System.out.printf("x_%d = %.01f + %.01f t\n", v.getVariable(), v.getValue().get(0), v.getValue().get(1));
         }

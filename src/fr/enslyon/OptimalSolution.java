@@ -20,4 +20,8 @@ public class OptimalSolution implements SimplexOutput {
             System.out.printf("x_%d = %.02f\n", e.getVariable(), e.getValue());
         }
     }
+
+    public double getValue() {
+        return value;
+    }
 }

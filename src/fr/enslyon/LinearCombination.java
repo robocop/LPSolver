@@ -27,6 +27,18 @@ public class LinearCombination {
         }
     }
 
+    LinearCombination(LinearCombination l) throws LinearCombinationException {
+        this(l.getVariablesLinearCombination().length, l.getMaximumIndexVariables());
+        int[] variables = l.getVariablesLinearCombination();
+        double[] constants = l.getConstantsLinearCombination();
+        double constant = l.getConstant();
+        this.setConstant(constant);
+        this.setVariables(variables);
+        this.setConstants(constants);
+    }
+
+
+
     public void setConstant(double constant) {
         this.constant = constant;
     }
@@ -50,6 +62,12 @@ public class LinearCombination {
         }
     }
 
+    public int getMaximumIndexVariables() {
+        return this.maximumIndexVariables;
+    }
+    public int getNumberOfTerms() {
+        return this.numberOfTerms;
+    }
     public double getConstant() {
         return this.constant;
     }
@@ -60,14 +78,72 @@ public class LinearCombination {
         return this.variablesLinearCombination;
     }
 
+    public int addVariable(double constantAssociated) {
+        int[] variables = new int[this.numberOfTerms+1];
+        double[] constants = new double[this.numberOfTerms+1];
+
+        System.arraycopy(this.variablesLinearCombination, 0, variables, 0, this.numberOfTerms);
+        System.arraycopy(this.constantsLinearCombination, 0, constants, 0, this.numberOfTerms);
+
+        variables[this.numberOfTerms] = this.maximumIndexVariables;
+        constants[this.numberOfTerms] = constantAssociated;
+
+        this.numberOfTerms += 1;
+        this.maximumIndexVariables += 1;
+
+        this.variablesLinearCombination = variables;
+        this.constantsLinearCombination = constants;
+
+        this.buildReverseVariables();
+
+        return this.maximumIndexVariables-1;
+
+    }
+
+    public void removeVariable(int variable) {
+        int[] variables = new int[this.numberOfTerms-1];
+        double[] constants = new double[this.numberOfTerms-1];
+        int j = 0;
+        for(int i = 0; i < this.numberOfTerms; i++) {
+            if(this.variablesLinearCombination[i] != variable) {
+                variables[j] = this.variablesLinearCombination[i];
+                constants[j] = this.constantsLinearCombination[i];
+                j++;
+            }
+        }
+        this.numberOfTerms--;
+        this.variablesLinearCombination = variables;
+        this.constantsLinearCombination = constants;
+
+        this.buildReverseVariables();
+    }
+
     public int getIndexVariable(int v) {
         return this.reverseVariables[v];
     }
 
+    public void scalarMultiplication(double scalar) {
+        this.constant *= scalar;
+        for(int i = 0; i < this.numberOfTerms; i++) {
+            this.constantsLinearCombination[i] *= scalar;
+        }
+    }
+
+    public void add(LinearCombination toAdd) {
+        double[] constantsToAdd = toAdd.getConstantsLinearCombination();
+        this.constant += toAdd.getConstant();
+        for(int i = 0; i < this.numberOfTerms; i++) {
+            int indexToAdd = toAdd.getIndexVariable(this.variablesLinearCombination[i]);
+            this.constantsLinearCombination[i] += constantsToAdd[indexToAdd];
+        }
+    }
+
+
+
     public void print() {
         System.out.printf("%.01f ", this.constant);
         for(int i = 0; i < numberOfTerms; i++) {
-            System.out.printf(" + %.01f * x_%d ",
+            System.out.printf("+ %.2f * x_%d ",
                     this.constantsLinearCombination[i], this.variablesLinearCombination[i]);
         }
         System.out.println();
@@ -120,12 +196,18 @@ public class LinearCombination {
                     //the variable v does not appears in the current equation
                     //we replace in the current entry the variable toSubsistute.get_variable by v
 
+                    //int old_v = this.variablesLinearCombination[currentIndexToSubstitute];
+                    int old_v = toSubstitute.getVariable();
                     this.variablesLinearCombination[currentIndexToSubstitute] = v;
+
+                    this.reverseVariables[old_v] = -1;
+                    this.reverseVariables[v] = currentIndexToSubstitute;
+
+
                     this.constantsLinearCombination[currentIndexToSubstitute] =
                             cstSubstitution * toSubstitute.getConstantsLinearCombination()[i];
 
-                    this.reverseVariables[this.getVariablesLinearCombination()[currentIndexToSubstitute]] = -1;
-                    this.reverseVariables[v] = currentIndexToSubstitute;
+
 
                 }
             }
