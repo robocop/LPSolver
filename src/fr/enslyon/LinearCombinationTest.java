@@ -25,6 +25,13 @@ public class LinearCombinationTest {
         org.junit.Assert.assertEquals(5, equ1.getConstant(), 0.01);
         org.junit.Assert.assertEquals(2, equ2.getConstant(), 0.01);
 
+        equ1.setConstant(12);
+        equ1.setConstants(new double[] {0, 1, 7});
+
+        org.junit.Assert.assertEquals(12, equ1.getConstant(), 0.01);
+        org.junit.Assert.assertEquals(2, equ2.getConstant(), 0.01);
+
+
     }
     @Test
     public void testGetIndexVariable() throws Exception {

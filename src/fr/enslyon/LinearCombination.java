@@ -28,10 +28,16 @@ public class LinearCombination {
     }
 
     LinearCombination(LinearCombination l) throws LinearCombinationException {
-        this(l.getVariablesLinearCombination().length, l.getMaximumIndexVariables());
-        int[] variables = l.getVariablesLinearCombination();
-        double[] constants = l.getConstantsLinearCombination();
+        this(l.getNumberOfTerms(), l.getMaximumIndexVariables());
+
+        int[] variables = new int[l.getNumberOfTerms()];
+        System.arraycopy(l.getVariablesLinearCombination(), 0, variables, 0, l.getNumberOfTerms());
+
+        double[] constants = new double[l.getNumberOfTerms()];
+        System.arraycopy(l.getConstantsLinearCombination(), 0, constants, 0, l.getNumberOfTerms());
+
         double constant = l.getConstant();
+
         this.setConstant(constant);
         this.setVariables(variables);
         this.setConstants(constants);

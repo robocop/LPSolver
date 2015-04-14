@@ -13,7 +13,7 @@ public class Simplex {
     private DictionaryEntry[] dictionary;
     private Set<Integer> initialVariables;
 
-    Simplex(int n, int m, LinearCombination objective, DictionaryEntry[] dictionary) {
+    Simplex(LinearCombination objective, DictionaryEntry[] dictionary) {
         this.objective = objective;
         this.dictionary = dictionary;
         this.buildInitialVariables();
@@ -76,7 +76,7 @@ public class Simplex {
             SimplexOutput solution = this.solve();
 
             if(solution instanceof OptimalSolution) {
-                if(((OptimalSolution) solution).getValue() > 0.0)
+                if(((OptimalSolution) solution).getValue() > 0.0001)
                     return new EmptyDomain();
                 else {
                     solution.print();
@@ -174,6 +174,7 @@ public class Simplex {
 
         for(int i = 0; i < this.dictionary.length; i++) {
             if(i != i_dict_leaving) {
+                this.dictionary[i].print();
                 this.dictionary[i].substitute(this.dictionary[i_dict_leaving]);
                 this.dictionary[i].print();
             }
@@ -272,7 +273,6 @@ public class Simplex {
         //We remove the variable added.
         for(int j = 0; j < this.dictionary.length; j++) {
             this.dictionary[j].removeVariable(v);
-            this.dictionary[j].print();
         }
         objective.removeVariable(v);
 
@@ -286,7 +286,12 @@ public class Simplex {
             objective.add(l);
 
         }
+
         System.out.println("New objective:");
         this.printObjective();
+
+        for(int j = 0; j < this.dictionary.length; j++) {
+            this.dictionary[j].print();
+        }
     }
 }

@@ -42,7 +42,7 @@ public class Main {
 
             DictionaryEntry[] eqs = new DictionaryEntry[] {equ1, equ2, equ3};
 
-            Simplex s = new Simplex(2, 3, objective, eqs);
+            Simplex s = new Simplex(objective, eqs);
             SimplexOutput solution = s.solve();
 
             solution.print();

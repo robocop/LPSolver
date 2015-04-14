@@ -30,7 +30,7 @@ public class SimplexTest {
         e1.setVariables(new int[]{1, 3});
 
         DictionaryEntry[] dictionary = new DictionaryEntry[] {e0, e1};
-        Simplex s = new Simplex(2, 2, objective, dictionary);
+        Simplex s = new Simplex(objective, dictionary);
 
         SimplexOutput solution = s.solve();
 
@@ -70,7 +70,7 @@ public class SimplexTest {
 
         DictionaryEntry[] dictionary = new DictionaryEntry[] {equ1, equ2, equ3};
 
-        Simplex s = new Simplex(3, 3, objective, dictionary);
+        Simplex s = new Simplex(objective, dictionary);
         SimplexOutput solution = s.solve();
 
         org.junit.Assert.assertTrue(solution instanceof OptimalSolution);
