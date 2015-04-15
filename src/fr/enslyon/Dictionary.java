@@ -1,32 +1,33 @@
 package fr.enslyon;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by quentin on 14/04/15.
  */
-public class Dictionary {
-    private DictionaryEntry[] dictionaryEntries;
-    private LinearCombination objective;
+public class Dictionary<T> {
+    private ArrayList<DictionaryEntry<T>> dictionaryEntries;
+    private LinearCombination<T> objective;
     private Set<Integer> initialVariables;
     Boolean debug = false;
 
-    Dictionary(LinearCombination objective, DictionaryEntry[] dictionaryEntries, Boolean debug) {
+    Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, Boolean debug) {
         this.objective = objective;
         this.dictionaryEntries = dictionaryEntries;
         this.buildInitialVariables();
         this.debug = debug;
     }
 
-    public DictionaryEntry get(int j) {
-        return this.dictionaryEntries[j];
+    public DictionaryEntry<T> get(int j) {
+        return this.dictionaryEntries.get(j);
     }
-    public LinearCombination getObjective() {
+    public LinearCombination<T> getObjective() {
         return this.objective;
     }
-    public int length() {
-        return this.dictionaryEntries.length;
+    public int size() {
+        return this.dictionaryEntries.size();
     }
 
     public Set<Integer> getInitialVariables() {
@@ -49,7 +50,7 @@ public class Dictionary {
     }
 
     public void printDictionary() {
-        for(int j = 0; j < this.dictionaryEntries.length; j++) {
+        for(int j = 0; j < this.dictionaryEntries.size(); j++) {
             this.printDictionaryEntry(j);
         }
         this.print("----------------------\n");
@@ -61,17 +62,13 @@ public class Dictionary {
     private void buildInitialVariables() {
         this.initialVariables = new HashSet<Integer>();
         Set<Integer> slashVariables = new HashSet<Integer>();
-        for(int j = 0; j < this.dictionaryEntries.length; j++) {
-            slashVariables.add(this.dictionaryEntries[j].getVariable());
+        for(int j = 0; j < this.dictionaryEntries.size(); j++) {
+            slashVariables.add(this.dictionaryEntries.get(j).getVariable());
         }
-        for(int v = 0; v < this.objective.getNumberOfTerms() + this.dictionaryEntries.length; v++) {
+        for(int v = 0; v < this.objective.getNumberOfTerms() + this.dictionaryEntries.size(); v++) {
             if(!slashVariables.contains(v)) {
                 this.initialVariables.add(v);
             }
         }
     }
-
-
-
-
 }

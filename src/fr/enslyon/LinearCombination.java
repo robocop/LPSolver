@@ -1,174 +1,45 @@
 package fr.enslyon;
 
 /**
- * Created by quentin on 30/03/15.
+ * Created by quentin on 14/04/15.
  */
-public class LinearCombination {
-    protected int numberOfTerms; //number of free variables in the equation
-    protected int maximumIndexVariables; //the total number of variables is maximumIndexVariables
+public class LinearCombination<T> extends LinearCombinationBase<T> {
+    protected DivisionRing<T> ring;
 
-    protected double constant = 0;
-
-    protected int[] variablesLinearCombination;
-    protected int[] reverseVariables;
-    protected double[] constantsLinearCombination;
-
-    LinearCombination(int numberOfTerms, int maximumIndexVariables) throws LinearCombinationException {
-        if(numberOfTerms <= 0) {
-            throw new LinearCombinationException("the parameter numberOfTerms should be positive");
-        }
-        else if (numberOfTerms > maximumIndexVariables) {
-            throw new LinearCombinationException("the parameter maximumIndexVariables should be greater " +
-                    "than numberOfTerms");
-        }
-        else {
-            this.numberOfTerms = numberOfTerms;
-            this.maximumIndexVariables = maximumIndexVariables;
-        }
+    LinearCombination(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring)
+            throws LinearCombinationException {
+        super(numberOfTerms, maximumIndexVariables);
+        this.ring = ring;
     }
 
-    LinearCombination(LinearCombination l) throws LinearCombinationException {
-        this(l.getNumberOfTerms(), l.getMaximumIndexVariables());
-
-        int[] variables = new int[l.getNumberOfTerms()];
-        System.arraycopy(l.getVariablesLinearCombination(), 0, variables, 0, l.getNumberOfTerms());
-
-        double[] constants = new double[l.getNumberOfTerms()];
-        System.arraycopy(l.getConstantsLinearCombination(), 0, constants, 0, l.getNumberOfTerms());
-
-        double constant = l.getConstant();
-
-        this.setConstant(constant);
-        this.setVariables(variables);
-        this.setConstants(constants);
+    LinearCombination(LinearCombination<T> l)
+            throws LinearCombinationException {
+        super(l);
+        this.ring = l.getRing();
     }
 
-    public void setConstant(double constant) {
-        this.constant = constant;
-    }
-    public void setVariables(int[] variables) throws LinearCombinationException {
-        if(variables.length != this.numberOfTerms) {
-            throw new LinearCombinationException("the size of the array of the variables should be equal to " +
-                    "numberOfTerms");
-        }
-        else {
-            this.variablesLinearCombination = variables;
-            this.buildReverseVariables();
-        }
-    }
-    public void setConstants(double[] constants) throws LinearCombinationException {
-        if(constants.length != this.numberOfTerms) {
-            throw new LinearCombinationException("the size of the array of the constants should be equal to " +
-                    "numberOfTerms");
-        }
-        else {
-            this.constantsLinearCombination = constants;
-        }
+    DivisionRing<T> getRing() {
+        return this.ring;
     }
 
-    public int getMaximumIndexVariables() {
-        return this.maximumIndexVariables;
-    }
-    public int getNumberOfTerms() {
-        return this.numberOfTerms;
-    }
-    public double getConstant() {
-        return this.constant;
-    }
-    public double[] getConstantsLinearCombination() {
-        return this.constantsLinearCombination;
-    }
-    public int[] getVariablesLinearCombination() {
-        return this.variablesLinearCombination;
-    }
-
-    public int addVariable(double constantAssociated) {
-        int[] variables = new int[this.numberOfTerms+1];
-        double[] constants = new double[this.numberOfTerms+1];
-
-        System.arraycopy(this.variablesLinearCombination, 0, variables, 0, this.numberOfTerms);
-        System.arraycopy(this.constantsLinearCombination, 0, constants, 0, this.numberOfTerms);
-
-        variables[this.numberOfTerms] = this.maximumIndexVariables;
-        constants[this.numberOfTerms] = constantAssociated;
-
-        this.numberOfTerms += 1;
-        this.maximumIndexVariables += 1;
-
-        this.variablesLinearCombination = variables;
-        this.constantsLinearCombination = constants;
-
-        this.buildReverseVariables();
-
-        return this.maximumIndexVariables-1;
-
-    }
-
-    public void removeVariable(int variable) {
-        int[] variables = new int[this.numberOfTerms-1];
-        double[] constants = new double[this.numberOfTerms-1];
-        int j = 0;
+    public void scalarMultiplication(T scalar) {
+        this.setConstant(this.ring.prod(this.getConstant(), scalar));
         for(int i = 0; i < this.numberOfTerms; i++) {
-            if(this.variablesLinearCombination[i] != variable) {
-                variables[j] = this.variablesLinearCombination[i];
-                constants[j] = this.constantsLinearCombination[i];
-                j++;
-            }
-        }
-        this.numberOfTerms--;
-        this.variablesLinearCombination = variables;
-        this.constantsLinearCombination = constants;
-
-        this.buildReverseVariables();
-    }
-
-    public int getIndexVariable(int v) {
-        return this.reverseVariables[v];
-    }
-
-    public void scalarMultiplication(double scalar) {
-        this.constant *= scalar;
-        for(int i = 0; i < this.numberOfTerms; i++) {
-            this.constantsLinearCombination[i] *= scalar;
+            this.constantsLinearCombination[i] = this.ring.prod(this.constantsLinearCombination[i], scalar);
         }
     }
 
-    public void add(LinearCombination toAdd) {
-        double[] constantsToAdd = toAdd.getConstantsLinearCombination();
-        this.constant += toAdd.getConstant();
+    public void add(LinearCombination<T> toAdd) {
+        this.setConstant(this.ring.add(this.getConstant(), toAdd.getConstant()));
+        T[] constantsToAdd = toAdd.getConstantsLinearCombination();
         for(int i = 0; i < this.numberOfTerms; i++) {
             int indexToAdd = toAdd.getIndexVariable(this.variablesLinearCombination[i]);
-            this.constantsLinearCombination[i] += constantsToAdd[indexToAdd];
+            this.constantsLinearCombination[i] = this.ring.add(this.constantsLinearCombination[i],
+                        constantsToAdd[indexToAdd]);
         }
     }
 
-
-
-    public String toString() {
-        String output = String.format("%.01f ", this.constant);
-        for(int i = 0; i < numberOfTerms; i++) {
-            output += String.format("+ %.2f * x_%d ",
-                    this.constantsLinearCombination[i], this.variablesLinearCombination[i]);
-        }
-        return output;
-    }
-
-    private void buildReverseVariables() {
-        //build the array this.reverseVariables such that:
-        //this.reverseVariables[v] = i with this.variablesLinearCombination[i] = v if i >= 0
-        //this.reverseVariables[v] = -1 otherwise
-
-        this.reverseVariables = new int[this.maximumIndexVariables];
-        for(int v = 0; v < this.maximumIndexVariables; v++) {
-            this.reverseVariables[v] = -1;
-        }
-
-        for(int i = 0; i < this.numberOfTerms; i++) {
-            this.reverseVariables[this.variablesLinearCombination[i]] = i;
-        }
-    }
-
-    public void substitute(DictionaryEntry toSubstitute) throws LinearCombinationException {
+    public void substitute(DictionaryEntry<T> toSubstitute) throws LinearCombinationException {
         //We substitute all the occurrences of the variable of toSubstitute by the corresponding value in
         // this current object.
         //The corresponding value is:
@@ -183,8 +54,11 @@ public class LinearCombination {
                     "does not appears in the linear combination. Impossible to substitute it");
         }
         else {
-            double cstSubstitution = this.constantsLinearCombination[currentIndexToSubstitute];
-            this.constant += cstSubstitution * toSubstitute.getConstant();
+            T cstSubstitution = this.constantsLinearCombination[currentIndexToSubstitute];
+            //this.constant += cstSubstitution * toSubstitute.getConstant(); :
+            this.setConstant(this.ring.add(this.ring.prod(cstSubstitution, toSubstitute.getConstant()),
+                                           this.getConstant()));
+
 
             for (int i = 0; i < this.numberOfTerms; i++) {
                 //i is an index of toSubstitute
@@ -193,8 +67,12 @@ public class LinearCombination {
                 int current_index_v= this.getIndexVariable(v);
 
                 if(current_index_v != -1) {
-                    this.constantsLinearCombination[current_index_v] +=
-                            cstSubstitution * toSubstitute.getConstantsLinearCombination()[i];
+                    //this.constantsLinearCombination[current_index_v] +=
+                    //        cstSubstitution * toSubstitute.getConstantsLinearCombination()[i]; :
+
+                    this.constantsLinearCombination[current_index_v] = this.ring.add(
+                            this.constantsLinearCombination[current_index_v],
+                            this.ring.prod(cstSubstitution, toSubstitute.getConstantsLinearCombination()[i]));
                 }
                 else {
                     //the variable v does not appears in the current equation
@@ -208,11 +86,10 @@ public class LinearCombination {
                     this.reverseVariables[v] = currentIndexToSubstitute;
 
 
-                    this.constantsLinearCombination[currentIndexToSubstitute] =
-                            cstSubstitution * toSubstitute.getConstantsLinearCombination()[i];
-
-
-
+                    //this.constantsLinearCombination[currentIndexToSubstitute] =
+                    //        cstSubstitution * toSubstitute.getConstantsLinearCombination()[i];
+                    this.constantsLinearCombination[currentIndexToSubstitute] = this.ring.prod(cstSubstitution,
+                            toSubstitute.getConstantsLinearCombination()[i]);
                 }
             }
         }

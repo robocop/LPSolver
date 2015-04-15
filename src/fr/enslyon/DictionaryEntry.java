@@ -1,15 +1,15 @@
 package fr.enslyon;
 
 /**
- * Created by quentin on 22/03/15.
+ * Created by quentin on 14/04/15.
  */
-public class DictionaryEntry extends LinearCombination {
+public class DictionaryEntry<T> extends LinearCombination<T> {
     private int variable; // in [|0, maximumIndexVariables-1|], variable involved in the equation
 
-    DictionaryEntry(int numberOfTerms, int maximumIndexVariables, int variable)
+    DictionaryEntry(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring, int variable)
             throws DictionaryEntryException, LinearCombinationException
     {
-        super(numberOfTerms, maximumIndexVariables);
+        super(numberOfTerms, maximumIndexVariables, ring);
 
         if (variable < 0 || variable >= maximumIndexVariables) {
             throw new DictionaryEntryException("the variable associated should be in the range " +
@@ -29,22 +29,24 @@ public class DictionaryEntry extends LinearCombination {
     }
 
     public void swap_variable(int variable) {
-        int index_variable = super.getIndexVariable(variable);
-        double c_variable = super.constantsLinearCombination[index_variable];
-        this.setConstant(this.constant / -c_variable);
+        int index_variable = this.getIndexVariable(variable);
+        T  c_variable = this.constantsLinearCombination[index_variable];
+
+        // new value for the constant : -constant / c_variable
+        this.setConstant(this.ring.prod(this.ring.inverse(this.ring.opposite(c_variable)), this.constant));
+
 
         this.variablesLinearCombination[index_variable] = this.variable;
-        this.constantsLinearCombination[index_variable] = -1.;
+        this.constantsLinearCombination[index_variable] = this.ring.fromInteger(-1);
         this.reverseVariables[variable] = -1;
         this.reverseVariables[this.variable] = index_variable;
 
         this.variable = variable;
 
         for(int i = 0; i < numberOfTerms; i++) {
-            this.constantsLinearCombination[i] /= -c_variable;
+            //this.constantsLinearCombination[i] /= -c_variable :
+            this.constantsLinearCombination[i] = this.ring.prod(this.constantsLinearCombination[i],
+                    this.ring.inverse(this.ring.opposite(c_variable)));
         }
     }
-
-
-
 }
