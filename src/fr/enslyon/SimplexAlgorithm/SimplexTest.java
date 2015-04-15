@@ -1,5 +1,9 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
 
+import fr.enslyon.DivisionRing.RationalDivisionRing;
+import fr.enslyon.DivisionRing.RationalNumber;
+import fr.enslyon.LinearCombination.DictionaryEntry;
+import fr.enslyon.LinearCombination.LinearCombination;
 import org.junit.Test;
 
 import java.util.ArrayList;

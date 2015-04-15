@@ -1,4 +1,6 @@
-package fr.enslyon;
+package fr.enslyon.LinearCombination;
+
+import fr.enslyon.DivisionRing.DivisionRing;
 
 /**
  * Created by quentin on 14/04/15.
@@ -6,7 +8,7 @@ package fr.enslyon;
 public class DictionaryEntry<T> extends LinearCombination<T> {
     private int variable; // in [|0, maximumIndexVariables-1|], variable involved in the equation
 
-    DictionaryEntry(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring, int variable)
+    public DictionaryEntry(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring, int variable)
             throws DictionaryEntryException, LinearCombinationException
     {
         super(numberOfTerms, maximumIndexVariables, ring);

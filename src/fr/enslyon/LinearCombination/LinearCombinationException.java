@@ -1,4 +1,4 @@
-package fr.enslyon;
+package fr.enslyon.LinearCombination;
 
 /**
  * Created by quentin on 30/03/15.

@@ -1,4 +1,7 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
+
+import fr.enslyon.LinearCombination.DictionaryEntry;
+import fr.enslyon.LinearCombination.LinearCombination;
 
 import java.util.ArrayList;
 import java.util.HashSet;

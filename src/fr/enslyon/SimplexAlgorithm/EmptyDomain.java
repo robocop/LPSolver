@@ -1,4 +1,4 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
 
 /**
  * Created by quentin on 02/04/15.

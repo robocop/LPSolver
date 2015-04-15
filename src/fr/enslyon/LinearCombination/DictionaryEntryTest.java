@@ -1,4 +1,7 @@
-package fr.enslyon;
+package fr.enslyon.LinearCombination;
+
+import fr.enslyon.DivisionRing.RationalDivisionRing;
+import fr.enslyon.DivisionRing.RationalNumber;
 
 public class DictionaryEntryTest {
 

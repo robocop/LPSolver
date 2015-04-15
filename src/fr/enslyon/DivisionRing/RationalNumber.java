@@ -1,4 +1,4 @@
-package fr.enslyon;
+package fr.enslyon.DivisionRing;
 
 /**
  * Created by quentin on 14/04/15.

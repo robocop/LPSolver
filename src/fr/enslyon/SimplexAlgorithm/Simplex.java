@@ -1,4 +1,10 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
+
+import fr.enslyon.DivisionRing.DivisionRing;
+import fr.enslyon.LinearCombination.DictionaryEntry;
+import fr.enslyon.LinearCombination.DictionaryEntryException;
+import fr.enslyon.LinearCombination.LinearCombination;
+import fr.enslyon.LinearCombination.LinearCombinationException;
 
 import java.util.ArrayList;
 
@@ -11,8 +17,8 @@ public class Simplex<T> extends SimplexBase<T> {
     Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring) {
         super(objective, dictionaryEntries, ring);
     }
-    Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring,
-            Boolean debug) {
+    public Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring,
+                   Boolean debug) {
         super(objective, dictionaryEntries, ring, debug);
     }
 

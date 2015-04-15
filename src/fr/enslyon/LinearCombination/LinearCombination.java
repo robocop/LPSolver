@@ -1,4 +1,6 @@
-package fr.enslyon;
+package fr.enslyon.LinearCombination;
+
+import fr.enslyon.DivisionRing.DivisionRing;
 
 /**
  * Created by quentin on 14/04/15.
@@ -6,13 +8,13 @@ package fr.enslyon;
 public class LinearCombination<T> extends LinearCombinationBase<T> {
     protected DivisionRing<T> ring;
 
-    LinearCombination(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring)
+    public LinearCombination(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring)
             throws LinearCombinationException {
         super(numberOfTerms, maximumIndexVariables);
         this.ring = ring;
     }
 
-    LinearCombination(LinearCombination<T> l)
+    public LinearCombination(LinearCombination<T> l)
             throws LinearCombinationException {
         super(l);
         this.ring = l.getRing();

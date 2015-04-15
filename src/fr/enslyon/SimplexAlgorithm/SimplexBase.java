@@ -1,4 +1,10 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
+
+import fr.enslyon.DivisionRing.DivisionRing;
+import fr.enslyon.LinearCombination.DictionaryEntry;
+import fr.enslyon.LinearCombination.DictionaryEntryException;
+import fr.enslyon.LinearCombination.LinearCombination;
+import fr.enslyon.LinearCombination.LinearCombinationException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

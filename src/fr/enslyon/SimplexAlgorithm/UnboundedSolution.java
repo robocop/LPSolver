@@ -1,4 +1,4 @@
-package fr.enslyon;
+package fr.enslyon.SimplexAlgorithm;
 
 import java.util.List;
 

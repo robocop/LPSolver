@@ -1,5 +1,14 @@
 package fr.enslyon;
 
+import fr.enslyon.DivisionRing.RationalDivisionRing;
+import fr.enslyon.DivisionRing.RationalNumber;
+import fr.enslyon.LinearCombination.DictionaryEntry;
+import fr.enslyon.LinearCombination.DictionaryEntryException;
+import fr.enslyon.LinearCombination.LinearCombination;
+import fr.enslyon.LinearCombination.LinearCombinationException;
+import fr.enslyon.SimplexAlgorithm.Simplex;
+import fr.enslyon.SimplexAlgorithm.SimplexOutput;
+
 import java.util.ArrayList;
 
 public class Main {
