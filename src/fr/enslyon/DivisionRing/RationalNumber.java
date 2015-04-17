@@ -61,4 +61,8 @@ public class RationalNumber {
             return gcd(b, a % b);
         }
     }
+
+    public RationalNumber(double x) {
+        this((int) Math.round(10000000 * x), 10000000);
+    }
  }

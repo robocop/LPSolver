@@ -1,6 +1,25 @@
 // Define a grammar called Hello
+
+
+
 grammar Input;
-linearSystem  : objective linearCombination SUBJECTTO inequalities BOUNDS bounds VARIABLES variables END;         // match keyword hello followed by an identifier
+
+@lexer::header {
+     package fr.enslyon.gen;
+}
+
+@parser::header {
+     package fr.enslyon.gen;
+}
+
+options {
+    // antlr will generate java lexer and parser
+    language = Java;
+}
+
+
+
+linearSystem  : objective linearCombination SUBJECTTO inequalities BOUNDS bounds VARIABLES variablesList END;
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 
 
@@ -15,18 +34,27 @@ END: 'END';
 
 linearCombination : firstItem (operator item)*;
 
-item : Float Variable | Variable | Float;
+item :
+    Float Variable #constantAndVariableItem
+  | Variable #variableItem
+  | Float    #constantItem
+  ;
+
 firstItem: '-'? item;
 
-inequalities:
-     (linearCombination comparaison '-'? Float)*;
+inequalities: inequality*;
+inequality:
+     (linearCombination comparison '-'? Float);
 
 bounds: bound*;
 
 bound:
-     (Variable comparaison Float | Float comparaison Variable comparaison Float);
+     Variable comparison Float #upperBound
+   | Float comparison Variable #lowerBound
+   | Float comparison Variable comparison Float #lowerAndUpperBound
+   ;
 
-variables:
+variablesList:
      Variable*;
 
 operator : Plus | Minus;
@@ -35,10 +63,10 @@ operator : Plus | Minus;
 Plus : '+';
 Minus : '-';
 
-comparaison: LessEqual | GreaterEqual;
+comparison: LessEqual | GreaterEqual;
 
 LessEqual : '<=';
 GreaterEqual : '>=';
 
 Float : ('0'..'9')+ ('.' ('0'..'9')+ ( ('e' | 'E') ('0'..'9')+)*)?;
-Variable : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
+Variable : ('a'..'z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
