@@ -62,6 +62,16 @@ public class LinearCombinationBase<T> {
         }
     }
 
+    public void setVariable(int variable, T value) {
+        int indexVariable = this.getIndexVariable(variable);
+        this.constantsLinearCombination[indexVariable] = value;
+    }
+
+    public T getVariable(int variable) {
+        int indexVariable = this.getIndexVariable(variable);
+        return this.constantsLinearCombination[indexVariable];
+    }
+
     public int getMaximumIndexVariables() {
         return this.maximumIndexVariables;
     }

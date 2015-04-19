@@ -1,41 +1,39 @@
 package fr.enslyon;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by quentin on 16/04/15.
  */
 public class Variables {
-    int generatorNameVariable;
-    private HashMap<String, Boolean> variables;
+    private int generatorNameVariable;
+    private HashSet<String> variables;
     Variables() {
         generatorNameVariable = 0;
-        this.variables = new HashMap<String, Boolean>();
+        this.variables = new HashSet<String>();
     }
-    public void add(String s, Boolean bounded) {
-        variables.put(s, bounded);
+    public void add(String s) {
+        variables.add(s);
     }
-    public String add(Boolean bounded) {
+    public String add() {
         String var = "nx_" +Integer.toString(this.generatorNameVariable);
-        if(!variables.containsKey(var)) {
-            this.add(var, bounded);
+        if(!variables.contains(var)) {
+            variables.add(var);
             return var;
         }
         else {
             this.generatorNameVariable++;
-            return add(bounded);
+            return this.add();
         }
     }
-    public void setBounded(String v) {
-        variables.put(v, true);
-    }
-    public Boolean isBounded(String v) {
-        return variables.get(v);
+
+    public HashSet<String> getVariables() {
+        return variables;
     }
 
     public String toString() {
         String output = "";
-        for(String var: variables.keySet()) {
+        for(String var: variables) {
             output += var + "\n";
         }
         return output;

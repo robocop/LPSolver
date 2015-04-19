@@ -40,11 +40,12 @@ item :
   | Float    #constantItem
   ;
 
-firstItem: '-'? item;
+firstItem:
+      operator? item;
 
 inequalities: inequality*;
 inequality:
-     (linearCombination comparison '-'? Float);
+     (linearCombination comparison operator? Float);
 
 bounds: bound*;
 
@@ -69,4 +70,4 @@ LessEqual : '<=';
 GreaterEqual : '>=';
 
 Float : ('0'..'9')+ ('.' ('0'..'9')+ ( ('e' | 'E') ('0'..'9')+)*)?;
-Variable : ('a'..'z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
+Variable : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;

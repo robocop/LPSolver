@@ -399,6 +399,9 @@ public class InputParser extends Parser {
 		public ItemContext item() {
 			return getRuleContext(ItemContext.class,0);
 		}
+		public OperatorContext operator() {
+			return getRuleContext(OperatorContext.class,0);
+		}
 		public FirstItemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -427,10 +430,10 @@ public class InputParser extends Parser {
 			{
 			setState(52);
 			_la = _input.LA(1);
-			if (_la==Minus) {
+			if (_la==Plus || _la==Minus) {
 				{
 				setState(51); 
-				match(Minus);
+				operator();
 				}
 			}
 
@@ -485,7 +488,7 @@ public class InputParser extends Parser {
 			setState(59);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Minus) | (1L << Float) | (1L << Variable))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Plus) | (1L << Minus) | (1L << Float) | (1L << Variable))) != 0)) {
 				{
 				{
 				setState(56); 
@@ -517,6 +520,9 @@ public class InputParser extends Parser {
 			return getRuleContext(ComparisonContext.class,0);
 		}
 		public TerminalNode Float() { return getToken(InputParser.Float, 0); }
+		public OperatorContext operator() {
+			return getRuleContext(OperatorContext.class,0);
+		}
 		public InequalityContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -550,10 +556,10 @@ public class InputParser extends Parser {
 			comparison();
 			setState(65);
 			_la = _input.LA(1);
-			if (_la==Minus) {
+			if (_la==Plus || _la==Minus) {
 				{
 				setState(64); 
-				match(Minus);
+				operator();
 				}
 			}
 
@@ -943,9 +949,9 @@ public class InputParser extends Parser {
 		"\2\2\2%\5\3\2\2\2&,\5\n\6\2\'(\5\26\f\2()\5\b\5\2)+\3\2\2\2*\'\3\2\2\2"+
 		"+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\7\3\2\2\2.,\3\2\2\2/\60\7\16\2\2\60\64"+
 		"\7\17\2\2\61\64\7\17\2\2\62\64\7\16\2\2\63/\3\2\2\2\63\61\3\2\2\2\63\62"+
-		"\3\2\2\2\64\t\3\2\2\2\65\67\7\13\2\2\66\65\3\2\2\2\66\67\3\2\2\2\678\3"+
+		"\3\2\2\2\64\t\3\2\2\2\65\67\5\26\f\2\66\65\3\2\2\2\66\67\3\2\2\2\678\3"+
 		"\2\2\289\5\b\5\29\13\3\2\2\2:<\5\16\b\2;:\3\2\2\2<?\3\2\2\2=;\3\2\2\2"+
-		"=>\3\2\2\2>\r\3\2\2\2?=\3\2\2\2@A\5\6\4\2AC\5\30\r\2BD\7\13\2\2CB\3\2"+
+		"=>\3\2\2\2>\r\3\2\2\2?=\3\2\2\2@A\5\6\4\2AC\5\30\r\2BD\5\26\f\2CB\3\2"+
 		"\2\2CD\3\2\2\2DE\3\2\2\2EF\7\16\2\2F\17\3\2\2\2GI\5\22\n\2HG\3\2\2\2I"+
 		"L\3\2\2\2JH\3\2\2\2JK\3\2\2\2K\21\3\2\2\2LJ\3\2\2\2MN\7\17\2\2NO\5\30"+
 		"\r\2OP\7\16\2\2P\\\3\2\2\2QR\7\16\2\2RS\5\30\r\2ST\7\17\2\2T\\\3\2\2\2"+

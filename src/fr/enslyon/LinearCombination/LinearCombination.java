@@ -41,6 +41,8 @@ public class LinearCombination<T> extends LinearCombinationBase<T> {
         }
     }
 
+
+
     public void substitute(DictionaryEntry<T> toSubstitute) throws LinearCombinationException {
         //We substitute all the occurrences of the variable of toSubstitute by the corresponding value in
         // this current object.

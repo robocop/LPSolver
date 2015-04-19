@@ -16,7 +16,7 @@ public class Dictionary<T> {
     private Set<Integer> initialVariables;
     Boolean debug = false;
 
-    Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, Boolean debug) {
+    public Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, Boolean debug) {
         this.objective = objective;
         this.dictionaryEntries = dictionaryEntries;
         this.buildInitialVariables();

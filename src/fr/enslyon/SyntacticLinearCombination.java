@@ -17,6 +17,14 @@ public class SyntacticLinearCombination<T> {
     }
 
     public void setVariable(String var, T cstAssociated) {
+        combination.put(var, cstAssociated);
+    }
+    public void setConstant(T cstAssociated) {
+        setVariable("", cstAssociated);
+    }
+
+
+    public void setOrUpdateVariable(String var, T cstAssociated) {
         if(combination.containsKey(var)) {
             combination.put(var, ring.add(cstAssociated, this.getVariable(var)));
         }
@@ -33,8 +41,8 @@ public class SyntacticLinearCombination<T> {
             return ring.fromInteger(0);
         }
     }
-    public void setConstant(T c) {
-        setVariable("", c);
+    public void setOrUpdateConstant(T c) {
+        setOrUpdateVariable("", c);
     }
     public T getVariable(String var) {
         return combination.get(var);
@@ -47,17 +55,39 @@ public class SyntacticLinearCombination<T> {
         }
     }
 
+    public boolean containsVariable(String var) {
+        return combination.containsKey(var);
+    }
+    /*
+        Replace var by var + a
+     */
+    public void translateVariable(String var, T a) {
+        if(this.containsVariable(var)) {
+            T v = ring.prod(this.getVariable(var), a);
+            this.setConstant(ring.add(this.getConstant(), v));
+        }
+    }
+
     public String toString() {
-        boolean first = true;
         String output = "";
+        if(combination.containsKey("") && ring.compare(combination.get(""), ring.fromInteger(0)) != 0) {
+            output += combination.get("").toString();
+        }
         for(String var: combination.keySet()) {
-            if(!first) {
-                output += " + ";
+            if(!var.equals("")) {
+                if(!output.equals("")) {
+                    output += " + ";
+                }
+                if(ring.compare(combination.get(var), ring.fromInteger(1)) == 0) {
+                    output += var;
+                }
+                else if(ring.compare(combination.get(var), ring.fromInteger(-1)) == 0) {
+                    output += String.format("-%s", var);
+                }
+                else {
+                    output += String.format("%s %s", combination.get(var).toString(), var);
+                }
             }
-            else {
-                first = false;
-            }
-            output += String.format("%s %s", combination.get(var).toString(), var);
         }
         return output;
     }

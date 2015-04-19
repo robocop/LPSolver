@@ -19,7 +19,7 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
     }
 
     @Override public Value visitLinearSystem(InputParser.LinearSystemContext ctx) {
-        LinearProgram<RationalNumber> lp = new LinearProgram<RationalNumber>(ring);
+        LinearProgram<RationalNumber> lp = new LinearProgram<RationalNumber>();
         Boolean isMaximize = ctx.objective().getText().equals("MAXIMIZE");
 
         SyntacticLinearCombination<RationalNumber> linearObj =
@@ -37,8 +37,6 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         lp.setInequalities(inequalities);
         lp.setBounds(bounds);
         lp.setVariables(variables);
-
-        System.out.println(lp.toString());
 
         return new Value(lp);
     }
@@ -58,9 +56,9 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
                 Value v = visit(child);
                 Item<RationalNumber> item = v.asItem();
                 if(!isPlus) {
-                    item.setConstant(ring.inverse(item.getConstant()));
+                    item.setConstant(ring.opposite(item.getConstant()));
                 }
-                l.setVariable(item.getVariable(), item.getConstant());
+                l.setOrUpdateVariable(item.getVariable(), item.getConstant());
             }
         }
         return new Value(l);
@@ -79,7 +77,7 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
     }
     @Override public Value visitFirstItem(InputParser.FirstItemContext ctx) {
         Item<RationalNumber> item = visit(ctx.item()).asItem();
-        if(ctx.getChild(0).getText().equals("-")) {
+        if(ctx.getText().charAt(0) == '-' ) {
             item.setConstant(ring.opposite(item.getConstant()));
         }
         return new Value(item);
@@ -99,7 +97,13 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
                 visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
         boolean isGreater = (ctx.comparison().getText().equals(">="));
 
+
         RationalNumber constant = this.readFloat(ctx.Float());
+        if(ctx.operator() != null) {
+            if (ctx.operator().getText().equals("-")) {
+                constant = ring.opposite(constant);
+            }
+        }
 
         Inequality<RationalNumber> inequality = new Inequality<RationalNumber>(ring, l, isGreater, constant);
 
@@ -157,7 +161,7 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
     @Override public Value visitVariablesList(InputParser.VariablesListContext ctx) {
         Variables vars = new Variables();
         for(ParseTree variable: ctx.children) {
-            vars.add(variable.getText(), false);
+            vars.add(variable.getText());
         }
         return new Value(vars);
     }

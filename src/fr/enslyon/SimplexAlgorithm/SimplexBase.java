@@ -22,6 +22,10 @@ public class SimplexBase<T> {
     protected Dictionary<T> dictionary;
     protected DivisionRing<T> ring;
 
+    SimplexBase(Dictionary<T> dictionary, DivisionRing<T> ring) {
+        this.dictionary = dictionary;
+        this.ring = ring;
+    }
     SimplexBase(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries,
                 DivisionRing<T> ring, Boolean debug) {
         this.ring = ring;

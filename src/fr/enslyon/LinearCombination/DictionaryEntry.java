@@ -21,6 +21,10 @@ public class DictionaryEntry<T> extends LinearCombination<T> {
             this.variable = variable;
         }
     }
+    public DictionaryEntry(LinearCombination<T> l, int variable) throws LinearCombinationException {
+        super(l);
+        this.variable = variable;
+    }
 
     public int getVariable() {
         return variable;

@@ -25,4 +25,7 @@ public class Item<T> {
     public Boolean isConstant() {
         return this.variable.equals("");
     }
+    public String toString() {
+        return String.format("%s: %s", variable, constant.toString());
+    }
 }

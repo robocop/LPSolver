@@ -4,38 +4,45 @@ package fr.enslyon;
  * Created by quentin on 17/04/15.
  */
 public class Bound<T> {
-    String variable;
-    T lower; T upper;
+    private String variable;
+    private T lower; private T upper;
+    private boolean hasLower = false;
+    private boolean hasUpper = false;
 
     Bound(String variable) {
         this.variable = variable;
     }
     public void setLowerBound(T bound) {
         this.lower = bound;
+        hasLower = true;
     }
     public void setUpperBound(T bound) {
         this.upper = bound;
+        hasUpper = true;
     }
 
-    public boolean isUpperBound() {
-        return (upper != null);
+    public boolean hasUpperBound() {
+        return hasUpper;
     }
     public T getUpperBound() {
         return upper;
     }
-    public boolean isLowerBound() {
-        return (lower != null);
+    public boolean hasLowerBound() {
+        return hasLower;
     }
     public T getLowerBound() {
         return lower;
     }
+    public String getVariable() {
+        return variable;
+    }
     public String toString() {
         String r = "";
-        if(lower != null) {
+        if(this.hasLower) {
             r = lower.toString() + " <= ";
         }
         r += variable;
-        if(upper != null) {
+        if(this.hasUpper) {
             r += " <= " + upper.toString();
         }
         return r;

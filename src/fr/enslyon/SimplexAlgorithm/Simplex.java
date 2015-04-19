@@ -14,7 +14,10 @@ import java.util.ArrayList;
  * Here is implemented the auxiliary l.p., the resolution and the projection of the dictionary.
  */
 public class Simplex<T> extends SimplexBase<T> {
-    Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring) {
+    public Simplex(Dictionary<T> dictionary, DivisionRing<T> ring) {
+        super(dictionary, ring);
+    }
+    public Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring) {
         super(objective, dictionaryEntries, ring);
     }
     public Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring,
@@ -30,7 +33,7 @@ public class Simplex<T> extends SimplexBase<T> {
             SimplexOutput<T> auxiliarySolution = this.solveAuxiliaryLP(variableAdded);
 
             if(auxiliarySolution instanceof OptimalSolution) {
-                if(ring.compare(((OptimalSolution<T>) auxiliarySolution).getValue(), ring.fromInteger(0)) > 0)
+                if(ring.compare(((OptimalSolution<T>) auxiliarySolution).getValue(), ring.fromInteger(0)) != 0)
                     return new EmptyDomain<T>();
                 else {
                     this.dictionaryProjection(variableAdded, previousObjective);
@@ -115,9 +118,17 @@ public class Simplex<T> extends SimplexBase<T> {
         for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
             int variable = previousObjective.getVariablesLinearCombination()[i];
             T scalar = previousObjective.getConstantsLinearCombination()[i];
-            LinearCombination<T> l = new LinearCombination<T>(this.dictionary.get(this.getIndexDictionary(variable)));
-            l.scalarMultiplication(scalar);
-            this.dictionary.getObjective().add(l);
+
+            int indexDictionary = this.getIndexDictionary(variable);
+            if(indexDictionary >= 0) {
+                LinearCombination<T> l = new LinearCombination<T>(this.dictionary.get(indexDictionary));
+                l.scalarMultiplication(scalar);
+                this.dictionary.getObjective().add(l);
+            }
+            else {
+                T previousValue = this.dictionary.getObjective().getVariable(variable);
+                this.dictionary.getObjective().setVariable(variable, ring.add(previousValue, scalar));
+            }
         }
 
         this.dictionary.print("New objective:\n");

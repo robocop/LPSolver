@@ -1,7 +1,5 @@
 package fr.enslyon;
 
-import fr.enslyon.DivisionRing.DivisionRing;
-
 /**
  * Created by quentin on 16/04/15.
  */
@@ -10,10 +8,8 @@ public class LinearProgram<T> {
     private Objective<T> objective;
     private Inequalities<T> inequalities;
     private Bounds<T> bounds;
-    private DivisionRing<T> ring;
 
-    LinearProgram(DivisionRing<T> ring) {
-        this.ring = ring;
+    LinearProgram() {
         this.variables = new Variables();
         this.bounds = new Bounds<T>();
         this.inequalities = new Inequalities<T>();
