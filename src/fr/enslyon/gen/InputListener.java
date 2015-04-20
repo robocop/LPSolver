@@ -173,6 +173,16 @@ public interface InputListener extends ParseTreeListener {
 	 */
 	void exitOperator(@NotNull InputParser.OperatorContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link InputParser#comparisonOrEqual}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparisonOrEqual(@NotNull InputParser.ComparisonOrEqualContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link InputParser#comparisonOrEqual}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparisonOrEqual(@NotNull InputParser.ComparisonOrEqualContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link InputParser#comparison}.
 	 * @param ctx the parse tree
 	 */

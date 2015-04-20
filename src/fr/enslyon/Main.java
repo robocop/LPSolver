@@ -21,12 +21,14 @@ public class Main {
         throws DictionaryEntryException, LinearCombinationException
     {
         try {
-            InputLexer lexer = new InputLexer(new ANTLRFileStream("/Users/quentin/Projet/LPSolver/complexExample.lp"));
+            InputLexer lexer = new InputLexer(new ANTLRFileStream("/Users/quentin/Projet/LPSolver/pl_example.lp"));
             InputParser parser = new InputParser(new CommonTokenStream(lexer));
             parser.setBuildParseTree(true);
             ParseTree tree = parser.linearSystem();
             ParserVisitor visitor = new ParserVisitor();
-            LinearProgram<RationalNumber> lp = visitor.visit(tree).asLinearProgram();
+            visitor.visit(tree);
+
+            LinearProgram<RationalNumber> lp = visitor.getLinearProgram();
 
             RationalDivisionRing ring = new RationalDivisionRing();
             LinearProgramToDictionary<RationalNumber> lpConverter =

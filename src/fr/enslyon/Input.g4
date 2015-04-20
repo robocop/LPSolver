@@ -19,7 +19,7 @@ options {
 
 
 
-linearSystem  : objective linearCombination SUBJECTTO inequalities BOUNDS bounds VARIABLES variablesList END;
+linearSystem  : objective linearCombination SUBJECTTO inequalities BOUNDS bounds VARIABLES variablesList END?;
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
 
 
@@ -45,7 +45,7 @@ firstItem:
 
 inequalities: inequality*;
 inequality:
-     (linearCombination comparison operator? Float);
+     (linearCombination comparisonOrEqual operator? Float);
 
 bounds: bound*;
 
@@ -64,10 +64,12 @@ operator : Plus | Minus;
 Plus : '+';
 Minus : '-';
 
+comparisonOrEqual: LessEqual | GreaterEqual | Equal;
 comparison: LessEqual | GreaterEqual;
 
 LessEqual : '<=';
 GreaterEqual : '>=';
+Equal : '=';
 
 Float : ('0'..'9')+ ('.' ('0'..'9')+ ( ('e' | 'E') ('0'..'9')+)*)?;
 Variable : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;

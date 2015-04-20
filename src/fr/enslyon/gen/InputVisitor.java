@@ -110,6 +110,12 @@ public interface InputVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOperator(@NotNull InputParser.OperatorContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link InputParser#comparisonOrEqual}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComparisonOrEqual(@NotNull InputParser.ComparisonOrEqualContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link InputParser#comparison}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -166,7 +166,7 @@ public class LinearProgramToDictionary<T> {
         }
 
 
-        return new Dictionary<T>(objective, eqs, false);
+        return new Dictionary<T>(objective, eqs, true);
 
 
     }

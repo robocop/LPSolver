@@ -20,32 +20,6 @@ public class Value {
         return (SyntacticLinearCombination<RationalNumber>)value;
     }
 
-    public LinearProgram<RationalNumber> asLinearProgram() {
-        return (LinearProgram<RationalNumber>)value;
-    }
-
-    public Objective<RationalNumber> asObjective() {
-        return (Objective<RationalNumber>)value;
-    }
-
-    public Inequality<RationalNumber> asInequality() {
-        return (Inequality<RationalNumber>) value;
-    }
-
-    public Inequalities<RationalNumber> asInequalities() {
-        return (Inequalities<RationalNumber>) value;
-    }
-
-    public Bound<RationalNumber> asBound() {
-        return (Bound<RationalNumber>) value;
-    }
-    public Bounds<RationalNumber> asBounds() {
-        return (Bounds<RationalNumber>) value;
-    }
-
-    public Variables asVariables() {
-        return (Variables) value;
-    }
 
     @Override
     public int hashCode() {

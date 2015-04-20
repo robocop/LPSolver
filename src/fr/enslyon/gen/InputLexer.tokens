@@ -9,8 +9,9 @@ Plus=8
 Minus=9
 LessEqual=10
 GreaterEqual=11
-Float=12
-Variable=13
+Equal=12
+Float=13
+Variable=14
 'MINIMIZE'=2
 'MAXIMIZE'=3
 'SUBJECT TO'=4
@@ -21,3 +22,4 @@ Variable=13
 '-'=9
 '<='=10
 '>='=11
+'='=12

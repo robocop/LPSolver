@@ -199,6 +199,18 @@ public class InputBaseListener implements InputListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterComparisonOrEqual(@NotNull InputParser.ComparisonOrEqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitComparisonOrEqual(@NotNull InputParser.ComparisonOrEqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterComparison(@NotNull InputParser.ComparisonContext ctx) { }
 	/**
 	 * {@inheritDoc}

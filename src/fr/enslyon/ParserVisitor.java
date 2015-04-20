@@ -13,13 +13,16 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ParserVisitor extends InputBaseVisitor<Value> {
     private RationalDivisionRing ring = new RationalDivisionRing();
+    LinearProgram<RationalNumber> linearProgram = new LinearProgram<RationalNumber>();
 
+    public LinearProgram<RationalNumber> getLinearProgram() {
+        return linearProgram;
+    }
     private RationalNumber readFloat(ParseTree ctx) {
         return new RationalNumber(Double.valueOf(ctx.getText()));
     }
 
     @Override public Value visitLinearSystem(InputParser.LinearSystemContext ctx) {
-        LinearProgram<RationalNumber> lp = new LinearProgram<RationalNumber>();
         Boolean isMaximize = ctx.objective().getText().equals("MAXIMIZE");
 
         SyntacticLinearCombination<RationalNumber> linearObj =
@@ -27,18 +30,14 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
 
         Objective<RationalNumber> objective = new Objective<RationalNumber>(ring, isMaximize, linearObj);
 
-        Inequalities<RationalNumber> inequalities = visitInequalities(ctx.inequalities()).asInequalities();
+        linearProgram.setObjective(objective);
 
-        Bounds<RationalNumber> bounds = visitBounds(ctx.bounds()).asBounds();
+        visitInequalities(ctx.inequalities());
+        visitBounds(ctx.bounds());
+        visitVariablesList(ctx.variablesList());
 
-        Variables variables = visitVariablesList(ctx.variablesList()).asVariables();
 
-        lp.setObjective(objective);
-        lp.setInequalities(inequalities);
-        lp.setBounds(bounds);
-        lp.setVariables(variables);
-
-        return new Value(lp);
+        return new Value(null);
     }
 
 
@@ -86,16 +85,17 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
 
     @Override public Value visitInequalities(InputParser.InequalitiesContext ctx) {
         Inequalities<RationalNumber> inequalities = new Inequalities<RationalNumber>();
+        linearProgram.setInequalities(inequalities);
         for(ParseTree ctxChild: ctx.children) {
-            inequalities.add(visit(ctxChild).asInequality());
+            visit(ctxChild);
         }
-        return new Value(inequalities);
+        return new Value(null);
     }
 
     @Override public Value visitInequality(InputParser.InequalityContext ctx) {
         SyntacticLinearCombination<RationalNumber> l =
                 visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
-        boolean isGreater = (ctx.comparison().getText().equals(">="));
+        boolean isGreater = (ctx.comparisonOrEqual().getText().equals(">="));
 
 
         RationalNumber constant = this.readFloat(ctx.Float());
@@ -106,17 +106,26 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         }
 
         Inequality<RationalNumber> inequality = new Inequality<RationalNumber>(ring, l, isGreater, constant);
+        linearProgram.getInequalities().add(inequality);
 
-        return new Value(inequality);
+        if(ctx.comparisonOrEqual().getText().equals("=")) {
+            SyntacticLinearCombination<RationalNumber> l2 =
+                    visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
+            Inequality<RationalNumber> inequality2 = new Inequality<RationalNumber>(ring, l2, !isGreater, constant);
+            linearProgram.getInequalities().add(inequality2);
+        }
+
+        return new Value(null);
+
     }
 
     @Override public Value visitBounds(InputParser.BoundsContext ctx) {
         Bounds<RationalNumber> bounds = new Bounds<RationalNumber>();
+        linearProgram.setBounds(bounds);
         for(InputParser.BoundContext bound: ctx.bound()) {
-            Bound b = visit(bound).asBound();
-            bounds.add(b);
+            visit(bound);
         }
-        return new Value(bounds);
+        return new Value(null);
     }
 
     @Override public Value visitUpperBound(InputParser.UpperBoundContext ctx) {
@@ -127,7 +136,8 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
             bound.setUpperBound(upper);
         else
             bound.setLowerBound(upper);
-        return new Value(bound);
+        linearProgram.getBounds().add(bound);
+        return new Value(null);
     }
     @Override public Value visitLowerBound(InputParser.LowerBoundContext ctx) {
         String v = ctx.Variable().getText();
@@ -138,7 +148,8 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         else
             bound.setUpperBound(lower);
 
-        return new Value(bound);
+        linearProgram.getBounds().add(bound);
+        return new Value(null);
     }
     @Override public Value visitLowerAndUpperBound(InputParser.LowerAndUpperBoundContext ctx) {
         String v = ctx.Variable().getText();
@@ -154,7 +165,8 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
             bound.setUpperBound(lower);
         }
 
-        return new Value(bound);
+        linearProgram.getBounds().add(bound);
+        return new Value(null);
     }
 
 
@@ -163,19 +175,8 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         for(ParseTree variable: ctx.children) {
             vars.add(variable.getText());
         }
-        return new Value(vars);
+        linearProgram.setVariables(vars);
+
+        return new Value(null);
     }
-
-    @Override public Value visitOperator(InputParser.OperatorContext ctx) {
-        System.out.println("operator: " + ctx.getText());
-        return visitChildren(ctx);
-    }
-
-    @Override public Value visitComparison(@NotNull InputParser.ComparisonContext ctx) {
-        System.out.println("comparison: " + ctx.toString());
-        return visitChildren(ctx);
-    }
-
-
-
 }
