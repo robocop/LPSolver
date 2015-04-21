@@ -3,6 +3,7 @@ package fr.enslyon;
 import fr.enslyon.DivisionRing.DivisionRing;
 import fr.enslyon.LinearCombination.DictionaryEntryException;
 import fr.enslyon.LinearCombination.LinearCombinationException;
+import fr.enslyon.Parser.LinearProgram;
 import fr.enslyon.SimplexAlgorithm.*;
 
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.HashSet;
 /**
  * Created by quentin on 21/04/15.
  */
+
+
 public class SimplexEncapsulation<T> {
     private boolean isObjectiveMaximize = true;
     public boolean debug = false;
@@ -19,6 +22,7 @@ public class SimplexEncapsulation<T> {
     private HashMap<String, Integer> variablesIndex = new HashMap<String, Integer>();
     private HashMap<String, String> composedVariables = new HashMap<String, String>();
     private Dictionary<T> dictionary;
+    private LinearProgram<T> linearProgram;
 
     private DivisionRing<T> ring;
 
@@ -49,16 +53,24 @@ public class SimplexEncapsulation<T> {
         this.dictionary = dictionary;
     }
 
+    public void setLinearProgram(LinearProgram<T> lp) {
+        this.linearProgram = lp;
+    }
+
     public void solve() throws LinearCombinationException, DictionaryEntryException {
         if(debug) {
+            System.out.println(linearProgram.toString() + "\n");
+        }
+        if(debug) {
             System.out.println("Variable assignations:");
-            System.out.println(variablesIndex);
+            System.out.println(variablesIndex.toString() + "\n");
         }
         Simplex<T> simplex = new Simplex<T>(this.dictionary, ring);
         SimplexOutput<T> solution = simplex.solve();
 
         if(debug) {
             solution.print();
+            System.out.println();
         }
 
         this.printSolution(solution);
@@ -92,12 +104,35 @@ public class SimplexEncapsulation<T> {
         }
     }
 
+    private void printUnboundedSolution(UnboundedSolution<T> unboundedSolution) {
+        System.out.println("Unbounded solution");
+        for(String var: variables) {
+            T constantCoefficient = unboundedSolution.getConstant(variablesIndex.get(var));
+            T unboundedCoefficient = unboundedSolution.getUnboundedCoefficient(variablesIndex.get(var));
+
+            if (composedVariables.containsKey(var)) {
+                String var2 = composedVariables.get(var);
+                T constantCoefficient2 = unboundedSolution.getConstant(variablesIndex.get(var2));
+                T unboundedCoefficient2 = unboundedSolution.getUnboundedCoefficient(variablesIndex.get(var2));
+
+                constantCoefficient = ring.add(constantCoefficient, ring.opposite(constantCoefficient2));
+                unboundedCoefficient = ring.add(unboundedCoefficient, ring.opposite(unboundedCoefficient2));
+            }
+
+            System.out.printf("%s = %s + %s t\n", var, constantCoefficient.toString(), unboundedCoefficient.toString());
+        }
+        System.out.println("t >= 0");
+    }
+
     private void printSolution(SimplexOutput<T> solution) {
         if(solution instanceof OptimalSolution) {
             this.printOptimalSolution((OptimalSolution<T>) solution);
         }
         else if(solution instanceof EmptyDomain) {
             solution.print();
+        }
+        else if(solution instanceof UnboundedSolution) {
+            this.printUnboundedSolution((UnboundedSolution<T>) solution);
         }
     }
 }

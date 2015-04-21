@@ -1,4 +1,4 @@
-// Generated from /Users/quentin/Projet/LPSolver/src/fr/enslyon/Input.g4 by ANTLR 4.5
+// Generated from /Users/quentin/Projet/LPSolver/src/fr/enslyon/Parser/Input.g4 by ANTLR 4.5
 
      package fr.enslyon.Parser.gen;
 

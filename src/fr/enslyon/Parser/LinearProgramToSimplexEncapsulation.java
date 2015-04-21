@@ -25,6 +25,7 @@ public class LinearProgramToSimplexEncapsulation<T> {
         simplexEncapsulation = new SimplexEncapsulation<T>(ring);
         HashSet<String> initialVariables = new HashSet<String>(linearProgram.getVariables().getVariables());
         simplexEncapsulation.setVariables(initialVariables);
+        simplexEncapsulation.setLinearProgram(this.linearProgram);
     }
 
     public LinearProgram<T> getLinearProgram() {

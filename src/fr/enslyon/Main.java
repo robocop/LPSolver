@@ -6,39 +6,51 @@ import fr.enslyon.LinearCombination.DictionaryEntryException;
 import fr.enslyon.LinearCombination.LinearCombinationException;
 import fr.enslyon.Parser.LinearProgram;
 import fr.enslyon.Parser.LinearProgramToSimplexEncapsulation;
-import fr.enslyon.Parser.ParserVisitor;
-import fr.enslyon.Parser.gen.InputLexer;
-import fr.enslyon.Parser.gen.InputParser;
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import fr.enslyon.Parser.Parser;
 
 import java.io.IOException;
 
 public class Main {
+    public static void printUsage() {
+        System.out.println("Usage: ./toto.sh file.lp [-d | -h]");
+    }
     public static void main(String[] args)
         throws DictionaryEntryException, LinearCombinationException
     {
         try {
-            InputLexer lexer = new InputLexer(new ANTLRFileStream("/Users/quentin/Projet/LPSolver/ComplexExample.lp"));
-            InputParser parser = new InputParser(new CommonTokenStream(lexer));
-            parser.setBuildParseTree(true);
-            ParseTree tree = parser.linearSystem();
+
+            if(args.length == 0) {
+                printUsage();
+                return;
+            }
+
+            String pathFile = args[0];
+
+            boolean debug = false;
+            for(int j = 1; j < args.length; j++) {
+                if (args[j].equals("-debug") || args[j].equals("-d") || args[j].equals("--debug")) {
+                    debug = true;
+                }
+                if (args[j].equals("-help") || args[j].equals("-h") || args[j].equals("--help")) {
+                    printUsage();
+                    return;
+                }
+            }
 
             RationalDivisionRing ring = new RationalDivisionRing();
+            Parser<RationalNumber> parser = new Parser<RationalNumber>();
 
-            ParserVisitor<RationalNumber> visitor = new ParserVisitor<RationalNumber>(ring);
-            visitor.visit(tree);
+            LinearProgram<RationalNumber> lp = parser.parse(ring, pathFile);
 
-            LinearProgram<RationalNumber> lp = visitor.getLinearProgram();
             LinearProgramToSimplexEncapsulation<RationalNumber> lpConverter =
                     new LinearProgramToSimplexEncapsulation<RationalNumber>(lp, ring);
 
             lpConverter.makeUniform();
             lpConverter.computeDictionary();
+
             SimplexEncapsulation<RationalNumber> simplexEncapsulation = lpConverter.getLinearProgramEncapsulation();
 
-            //simplexEncapsulation.setDebug(true);
+            simplexEncapsulation.setDebug(debug);
 
             simplexEncapsulation.solve();
 
@@ -50,5 +62,6 @@ public class Main {
             System.err.println("Syntax error");
             System.err.println(e.getMessage());
         }
+
     }
 }

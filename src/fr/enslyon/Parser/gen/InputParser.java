@@ -1,4 +1,4 @@
-// Generated from /Users/quentin/Projet/LPSolver/src/fr/enslyon/Input.g4 by ANTLR 4.5
+// Generated from /Users/quentin/Projet/LPSolver/src/fr/enslyon/Parser/Input.g4 by ANTLR 4.5
 
      package fr.enslyon.Parser.gen;
 
@@ -8,6 +8,8 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class InputParser extends Parser {
@@ -18,7 +20,8 @@ public class InputParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		WS=1, MINIMIZE=2, MAXIMIZE=3, SUBJECTTO=4, BOUNDS=5, VARIABLES=6, END=7, 
-		Plus=8, Minus=9, LessEqual=10, GreaterEqual=11, Equal=12, Float=13, Variable=14;
+		Plus=8, Minus=9, LessEqual=10, GreaterEqual=11, Equal=12, Float=13, Variable=14, 
+		BlockComment=15, LineComment=16;
 	public static final int
 		RULE_linearSystem = 0, RULE_objective = 1, RULE_linearCombination = 2, 
 		RULE_item = 3, RULE_firstItem = 4, RULE_inequalities = 5, RULE_inequality = 6, 
@@ -37,7 +40,7 @@ public class InputParser extends Parser {
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "WS", "MINIMIZE", "MAXIMIZE", "SUBJECTTO", "BOUNDS", "VARIABLES", 
 		"END", "Plus", "Minus", "LessEqual", "GreaterEqual", "Equal", "Float", 
-		"Variable"
+		"Variable", "BlockComment", "LineComment"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -113,14 +116,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_linearSystem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterLinearSystem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitLinearSystem(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitLinearSystem(this);
 			else return visitor.visitChildren(this);
@@ -180,14 +175,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_objective; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterObjective(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitObjective(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitObjective(this);
 			else return visitor.visitChildren(this);
@@ -240,14 +227,6 @@ public class InputParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_linearCombination; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterLinearCombination(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitLinearCombination(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitLinearCombination(this);
@@ -308,14 +287,6 @@ public class InputParser extends Parser {
 		public TerminalNode Variable() { return getToken(InputParser.Variable, 0); }
 		public VariableItemContext(ItemContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterVariableItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitVariableItem(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitVariableItem(this);
 			else return visitor.visitChildren(this);
@@ -326,14 +297,6 @@ public class InputParser extends Parser {
 		public TerminalNode Variable() { return getToken(InputParser.Variable, 0); }
 		public ConstantAndVariableItemContext(ItemContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterConstantAndVariableItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitConstantAndVariableItem(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitConstantAndVariableItem(this);
 			else return visitor.visitChildren(this);
@@ -342,14 +305,6 @@ public class InputParser extends Parser {
 	public static class ConstantItemContext extends ItemContext {
 		public TerminalNode Float() { return getToken(InputParser.Float, 0); }
 		public ConstantItemContext(ItemContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterConstantItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitConstantItem(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitConstantItem(this);
@@ -414,14 +369,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_firstItem; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterFirstItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitFirstItem(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitFirstItem(this);
 			else return visitor.visitChildren(this);
@@ -470,14 +417,6 @@ public class InputParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inequalities; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterInequalities(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitInequalities(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitInequalities(this);
@@ -535,14 +474,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_inequality; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterInequality(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitInequality(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitInequality(this);
 			else return visitor.visitChildren(this);
@@ -597,14 +528,6 @@ public class InputParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_bounds; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterBounds(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitBounds(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitBounds(this);
@@ -665,14 +588,6 @@ public class InputParser extends Parser {
 		public TerminalNode Variable() { return getToken(InputParser.Variable, 0); }
 		public LowerBoundContext(BoundContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterLowerBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitLowerBound(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitLowerBound(this);
 			else return visitor.visitChildren(this);
@@ -692,14 +607,6 @@ public class InputParser extends Parser {
 		public TerminalNode Variable() { return getToken(InputParser.Variable, 0); }
 		public LowerAndUpperBoundContext(BoundContext ctx) { copyFrom(ctx); }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterLowerAndUpperBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitLowerAndUpperBound(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitLowerAndUpperBound(this);
 			else return visitor.visitChildren(this);
@@ -712,14 +619,6 @@ public class InputParser extends Parser {
 		}
 		public TerminalNode Float() { return getToken(InputParser.Float, 0); }
 		public UpperBoundContext(BoundContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterUpperBound(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitUpperBound(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitUpperBound(this);
@@ -796,14 +695,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_variablesList; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterVariablesList(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitVariablesList(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitVariablesList(this);
 			else return visitor.visitChildren(this);
@@ -852,14 +743,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_operator; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterOperator(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitOperator(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitOperator(this);
 			else return visitor.visitChildren(this);
@@ -901,14 +784,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_comparisonOrEqual; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterComparisonOrEqual(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitComparisonOrEqual(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitComparisonOrEqual(this);
 			else return visitor.visitChildren(this);
@@ -949,14 +824,6 @@ public class InputParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_comparison; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).enterComparison(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof InputListener ) ((InputListener)listener).exitComparison(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof InputVisitor ) return ((InputVisitor<? extends T>)visitor).visitComparison(this);
 			else return visitor.visitChildren(this);
@@ -990,7 +857,7 @@ public class InputParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\20m\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\22m\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2&\n\2"+
 		"\3\3\3\3\3\4\3\4\3\4\3\4\7\4.\n\4\f\4\16\4\61\13\4\3\5\3\5\3\5\3\5\5\5"+

@@ -8,7 +8,6 @@ import fr.enslyon.LinearCombination.LinearCombinationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,17 +52,17 @@ public class SimplexBase<T> {
     public SimplexOutput<T> getUnboundedSolution() throws DictionaryEntryException {
         int entering_variable = this.getVariableWithPositiveConstant();
         if (entering_variable >= 0 && this.isUnboundedSolution(entering_variable)) {
-            List<ResultVariable<List<T>>> solution = new LinkedList<ResultVariable<List<T>>>();
+            HashMap<Integer, List<T>> solution = new HashMap<Integer, List<T>>();
             for (int i = 0; i < this.dictionary.size(); i++) {
                 int v = dictionary.get(i).getVariable();
                 T c = dictionary.get(i).getConstantsLinearCombination()
                             [dictionary.get(i).getIndexVariable(entering_variable)];
-                List<T> values = new LinkedList<T>();
+                List<T> values = new ArrayList<T>();
                 values.add(dictionary.get(i).getConstant());
                 values.add(c);
-                solution.add(new ResultVariable<List<T>>(v, values));
+                solution.put(v, values);
             }
-            return new UnboundedSolution<T>(entering_variable, solution);
+            return new UnboundedSolution<T>(ring, entering_variable, solution);
         } else {
             throw new DictionaryEntryException("The l.p. is not in a state corresponding to an unbounded solution");
         }
