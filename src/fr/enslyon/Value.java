@@ -1,23 +1,21 @@
 package fr.enslyon;
 
-import fr.enslyon.DivisionRing.RationalNumber;
-
 /**
  * Created by quentin on 16/04/15.
  */
-public class Value {
+public class Value<T> {
     final Object value;
 
     public Value(Object value) {
         this.value = value;
     }
 
-    public Item<RationalNumber> asItem() {
-        return (Item<RationalNumber>) value;
+    public Item<T> asItem() {
+        return (Item<T>) value;
     }
 
-    public SyntacticLinearCombination<RationalNumber> asSyntacticLinearCombination() {
-        return (SyntacticLinearCombination<RationalNumber>)value;
+    public SyntacticLinearCombination<T> asSyntacticLinearCombination() {
+        return (SyntacticLinearCombination<T>)value;
     }
 
 

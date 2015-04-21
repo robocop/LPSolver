@@ -1,7 +1,6 @@
 package fr.enslyon;
 
-import fr.enslyon.DivisionRing.RationalDivisionRing;
-import fr.enslyon.DivisionRing.RationalNumber;
+import fr.enslyon.DivisionRing.DoubleDivisionRing;
 import fr.enslyon.gen.InputBaseVisitor;
 import fr.enslyon.gen.InputParser;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -11,24 +10,24 @@ import org.antlr.v4.runtime.tree.ParseTree;
 /**
  * Created by quentin on 16/04/15.
  */
-public class ParserVisitor extends InputBaseVisitor<Value> {
-    private RationalDivisionRing ring = new RationalDivisionRing();
-    LinearProgram<RationalNumber> linearProgram = new LinearProgram<RationalNumber>();
+public class ParserVisitor extends InputBaseVisitor<Value<Double>> {
+    private DoubleDivisionRing ring = new DoubleDivisionRing();
+    LinearProgram<Double> linearProgram = new LinearProgram<Double>();
 
-    public LinearProgram<RationalNumber> getLinearProgram() {
+    public LinearProgram<Double> getLinearProgram() {
         return linearProgram;
     }
-    private RationalNumber readFloat(ParseTree ctx) {
-        return new RationalNumber(Double.valueOf(ctx.getText()));
+    private Double readFloat(ParseTree ctx) {
+        return Double.valueOf(ctx.getText());
     }
 
-    @Override public Value visitLinearSystem(InputParser.LinearSystemContext ctx) {
+    @Override public Value<Double> visitLinearSystem(InputParser.LinearSystemContext ctx) {
         Boolean isMaximize = ctx.objective().getText().equals("MAXIMIZE");
 
-        SyntacticLinearCombination<RationalNumber> linearObj =
+        SyntacticLinearCombination<Double> linearObj =
                 visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
 
-        Objective<RationalNumber> objective = new Objective<RationalNumber>(ring, isMaximize, linearObj);
+        Objective<Double> objective = new Objective<Double>(ring, isMaximize, linearObj);
 
         linearProgram.setObjective(objective);
 
@@ -37,12 +36,12 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         visitVariablesList(ctx.variablesList());
 
 
-        return new Value(null);
+        return new Value<Double>(null);
     }
 
 
-    @Override public Value visitLinearCombination(InputParser.LinearCombinationContext ctx) {
-        SyntacticLinearCombination<RationalNumber> l = new SyntacticLinearCombination<RationalNumber>(ring);
+    @Override public Value<Double> visitLinearCombination(InputParser.LinearCombinationContext ctx) {
+        SyntacticLinearCombination<Double> l = new SyntacticLinearCombination<Double>(ring);
         Boolean isPlus = true;
         for(ParseTree child: ctx.children) {
             if(child.getText().equals("+")) {
@@ -53,109 +52,109 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
             }
             else {
                 Value v = visit(child);
-                Item<RationalNumber> item = v.asItem();
+                Item<Double> item = v.asItem();
                 if(!isPlus) {
                     item.setConstant(ring.opposite(item.getConstant()));
                 }
                 l.setOrUpdateVariable(item.getVariable(), item.getConstant());
             }
         }
-        return new Value(l);
+        return new Value<Double>(l);
     }
 
-    @Override public Value visitConstantAndVariableItem(@NotNull InputParser.ConstantAndVariableItemContext ctx) {
-        RationalNumber value = this.readFloat(ctx.Float());
-        return new Value(new Item<RationalNumber>(ctx.Variable().getText(), value));
+    @Override public Value<Double> visitConstantAndVariableItem(@NotNull InputParser.ConstantAndVariableItemContext ctx) {
+        Double value = this.readFloat(ctx.Float());
+        return new Value<Double>(new Item<Double>(ctx.Variable().getText(), value));
     }
-    @Override public Value visitConstantItem(@NotNull InputParser.ConstantItemContext ctx) {
-        RationalNumber value = this.readFloat(ctx.Float());
-        return new Value(new Item<RationalNumber>(value));
+    @Override public Value<Double> visitConstantItem(@NotNull InputParser.ConstantItemContext ctx) {
+        Double value = this.readFloat(ctx.Float());
+        return new Value<Double>(new Item<Double>(value));
     }
-    @Override public Value visitVariableItem(@NotNull InputParser.VariableItemContext ctx) {
-        return new Value(new Item<RationalNumber>(ctx.Variable().getText(), ring.fromInteger(1)));
+    @Override public Value<Double> visitVariableItem(@NotNull InputParser.VariableItemContext ctx) {
+        return new Value<Double>(new Item<Double>(ctx.Variable().getText(), ring.fromInteger(1)));
     }
-    @Override public Value visitFirstItem(InputParser.FirstItemContext ctx) {
-        Item<RationalNumber> item = visit(ctx.item()).asItem();
+    @Override public Value<Double> visitFirstItem(InputParser.FirstItemContext ctx) {
+        Item<Double> item = visit(ctx.item()).asItem();
         if(ctx.getText().charAt(0) == '-' ) {
             item.setConstant(ring.opposite(item.getConstant()));
         }
-        return new Value(item);
+        return new Value<Double>(item);
     }
 
 
-    @Override public Value visitInequalities(InputParser.InequalitiesContext ctx) {
-        Inequalities<RationalNumber> inequalities = new Inequalities<RationalNumber>();
+    @Override public Value<Double> visitInequalities(InputParser.InequalitiesContext ctx) {
+        Inequalities<Double> inequalities = new Inequalities<Double>();
         linearProgram.setInequalities(inequalities);
         for(ParseTree ctxChild: ctx.children) {
             visit(ctxChild);
         }
-        return new Value(null);
+        return new Value<Double>(null);
     }
 
-    @Override public Value visitInequality(InputParser.InequalityContext ctx) {
-        SyntacticLinearCombination<RationalNumber> l =
+    @Override public Value<Double> visitInequality(InputParser.InequalityContext ctx) {
+        SyntacticLinearCombination<Double> l =
                 visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
         boolean isGreater = (ctx.comparisonOrEqual().getText().equals(">="));
 
 
-        RationalNumber constant = this.readFloat(ctx.Float());
+        Double constant = this.readFloat(ctx.Float());
         if(ctx.operator() != null) {
             if (ctx.operator().getText().equals("-")) {
                 constant = ring.opposite(constant);
             }
         }
 
-        Inequality<RationalNumber> inequality = new Inequality<RationalNumber>(ring, l, isGreater, constant);
+        Inequality<Double> inequality = new Inequality<Double>(ring, l, isGreater, constant);
         linearProgram.getInequalities().add(inequality);
 
         if(ctx.comparisonOrEqual().getText().equals("=")) {
-            SyntacticLinearCombination<RationalNumber> l2 =
+            SyntacticLinearCombination<Double> l2 =
                     visitLinearCombination(ctx.linearCombination()).asSyntacticLinearCombination();
-            Inequality<RationalNumber> inequality2 = new Inequality<RationalNumber>(ring, l2, !isGreater, constant);
+            Inequality<Double> inequality2 = new Inequality<Double>(ring, l2, !isGreater, constant);
             linearProgram.getInequalities().add(inequality2);
         }
 
-        return new Value(null);
+        return new Value<Double>(null);
 
     }
 
-    @Override public Value visitBounds(InputParser.BoundsContext ctx) {
-        Bounds<RationalNumber> bounds = new Bounds<RationalNumber>();
+    @Override public Value<Double> visitBounds(InputParser.BoundsContext ctx) {
+        Bounds<Double> bounds = new Bounds<Double>();
         linearProgram.setBounds(bounds);
         for(InputParser.BoundContext bound: ctx.bound()) {
             visit(bound);
         }
-        return new Value(null);
+        return new Value<Double>(null);
     }
 
-    @Override public Value visitUpperBound(InputParser.UpperBoundContext ctx) {
+    @Override public Value<Double> visitUpperBound(InputParser.UpperBoundContext ctx) {
         String v = ctx.Variable().getText();
-        RationalNumber upper = this.readFloat(ctx.Float());
-        Bound<RationalNumber> bound = new Bound<RationalNumber>(v);
+        Double upper = this.readFloat(ctx.Float());
+        Bound<Double> bound = new Bound<Double>(v);
         if(ctx.comparison().getText().equals("<="))
             bound.setUpperBound(upper);
         else
             bound.setLowerBound(upper);
         linearProgram.getBounds().add(bound);
-        return new Value(null);
+        return new Value<Double>(null);
     }
-    @Override public Value visitLowerBound(InputParser.LowerBoundContext ctx) {
+    @Override public Value<Double> visitLowerBound(InputParser.LowerBoundContext ctx) {
         String v = ctx.Variable().getText();
-        RationalNumber lower = this.readFloat(ctx.Float());
-        Bound<RationalNumber> bound = new Bound<RationalNumber>(v);
+        Double lower = this.readFloat(ctx.Float());
+        Bound<Double> bound = new Bound<Double>(v);
         if(ctx.comparison().getText().equals("<="))
             bound.setLowerBound(lower);
         else
             bound.setUpperBound(lower);
 
         linearProgram.getBounds().add(bound);
-        return new Value(null);
+        return new Value<Double>(null);
     }
-    @Override public Value visitLowerAndUpperBound(InputParser.LowerAndUpperBoundContext ctx) {
+    @Override public Value<Double> visitLowerAndUpperBound(InputParser.LowerAndUpperBoundContext ctx) {
         String v = ctx.Variable().getText();
-        RationalNumber lower = this.readFloat(ctx.Float(0));
-        RationalNumber upper = this.readFloat(ctx.Float(1));
-        Bound<RationalNumber> bound = new Bound<RationalNumber>(v);
+        Double lower = this.readFloat(ctx.Float(0));
+        Double upper = this.readFloat(ctx.Float(1));
+        Bound<Double> bound = new Bound<Double>(v);
         if(ctx.comparison(0).getText().equals("<=")) {
             bound.setLowerBound(lower);
             bound.setUpperBound(upper);
@@ -166,11 +165,11 @@ public class ParserVisitor extends InputBaseVisitor<Value> {
         }
 
         linearProgram.getBounds().add(bound);
-        return new Value(null);
+        return new Value<Double>(null);
     }
 
 
-    @Override public Value visitVariablesList(InputParser.VariablesListContext ctx) {
+    @Override public Value<Double> visitVariablesList(InputParser.VariablesListContext ctx) {
         Variables vars = new Variables();
         for(ParseTree variable: ctx.children) {
             vars.add(variable.getText());

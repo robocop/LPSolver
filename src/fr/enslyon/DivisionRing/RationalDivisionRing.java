@@ -32,8 +32,8 @@ public class RationalDivisionRing implements DivisionRing<RationalNumber> {
 
     @Override
     public int compare(RationalNumber x, RationalNumber y) {
-        int a = x.getNominator() * y.getDenominator();
-        int b = x.getDenominator() * y.getNominator();
+        long a = x.getNominator() * y.getDenominator();
+        long b = x.getDenominator() * y.getNominator();
 
         if(a < b)
             return -1;

@@ -1,7 +1,6 @@
 package fr.enslyon;
 
-import fr.enslyon.DivisionRing.RationalDivisionRing;
-import fr.enslyon.DivisionRing.RationalNumber;
+import fr.enslyon.DivisionRing.DoubleDivisionRing;
 import fr.enslyon.LinearCombination.DictionaryEntryException;
 import fr.enslyon.LinearCombination.LinearCombinationException;
 import fr.enslyon.SimplexAlgorithm.Dictionary;
@@ -21,30 +20,30 @@ public class Main {
         throws DictionaryEntryException, LinearCombinationException
     {
         try {
-            InputLexer lexer = new InputLexer(new ANTLRFileStream("/Users/quentin/Projet/LPSolver/pl_example.lp"));
+            InputLexer lexer = new InputLexer(new ANTLRFileStream("/Users/quentin/Projet/LPSolver/MobilePhone.lp"));
             InputParser parser = new InputParser(new CommonTokenStream(lexer));
             parser.setBuildParseTree(true);
             ParseTree tree = parser.linearSystem();
             ParserVisitor visitor = new ParserVisitor();
             visitor.visit(tree);
 
-            LinearProgram<RationalNumber> lp = visitor.getLinearProgram();
+            LinearProgram<Double> lp = visitor.getLinearProgram();
 
-            RationalDivisionRing ring = new RationalDivisionRing();
-            LinearProgramToDictionary<RationalNumber> lpConverter =
-                    new LinearProgramToDictionary<RationalNumber>(lp, ring);
+            DoubleDivisionRing ring = new DoubleDivisionRing();
+            LinearProgramToDictionary<Double> lpConverter =
+                    new LinearProgramToDictionary<Double>(lp, ring);
 
             lpConverter.makeUniform();
 
             HashMap<String, Integer> indexAssociatedToVariables = lpConverter.associateIndexToVariables();
-            Dictionary<RationalNumber> dictionary = lpConverter.convertToDictionary(indexAssociatedToVariables);
+            Dictionary<Double> dictionary = lpConverter.convertToDictionary(indexAssociatedToVariables);
 
             System.out.println(lpConverter.getLinearProgram().toString());
 
             dictionary.printDictionary();
 
-            Simplex<RationalNumber> s = new Simplex<RationalNumber>(dictionary, ring);
-            SimplexOutput<RationalNumber> solution = s.solve();
+            Simplex<Double> s = new Simplex<Double>(dictionary, ring);
+            SimplexOutput<Double> solution = s.solve();
 
             solution.print();
 

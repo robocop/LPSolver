@@ -4,27 +4,27 @@ package fr.enslyon.DivisionRing;
  * Created by quentin on 14/04/15.
  */
 public class RationalNumber {
-    int a; int b;
-    public RationalNumber(int a, int b) throws ArithmeticException{
+    long a; long b;
+    public RationalNumber(long a, long b) throws ArithmeticException{
         this.a = this.sign(b) * a;
         this.b = this.sign(b) * b;
         if(this.b == 0) {
             throw new ArithmeticException();
         }
-        int gcd = this.gcd(this.sign(this.a) * this.a, this.b);
+        long gcd = this.gcd(this.sign(this.a) * this.a, this.b);
         this.a = this.a / gcd;
         this.b = this.b / gcd;
     }
 
-    public RationalNumber(int x) {
+    public RationalNumber(long x) {
         this.a = x;
         this.b = 1;
     }
 
-    public int getNominator() {
+    public long getNominator() {
         return this.a;
     }
-    public int getDenominator() {
+    public long getDenominator() {
         return this.b;
     }
 
@@ -45,7 +45,7 @@ public class RationalNumber {
         }
     }
 
-    private int sign(int x) {
+    private long sign(long x) {
         if(x >= 0)
             return 1;
         else {
@@ -53,7 +53,7 @@ public class RationalNumber {
         }
     }
 
-    private int gcd(int a, int b) {
+    private long gcd(long a, long b) {
         if(b == 0) {
             return a;
         }
@@ -63,6 +63,6 @@ public class RationalNumber {
     }
 
     public RationalNumber(double x) {
-        this((int) Math.round(10000000 * x), 10000000);
+        this(Math.round(100000 * x), 100000);
     }
  }

@@ -108,11 +108,44 @@ public class Simplex<T> extends SimplexBase<T> {
 
     private void dictionaryProjection(int v, LinearCombination<T> previousObjective)
             throws LinearCombinationException {
+
         //We remove the variable added for each entry.
+
+        /*
+        We check that there is no equation of the form:
+            x_v = ... in the dictionary
+         */
+        int indexVAsSlashVariable = -1;
+        for(int j = 0; j < this.dictionary.size(); j++) {
+            if(this.dictionary.get(j).getVariable() == v) {
+                indexVAsSlashVariable = j;
+                break;
+            }
+        }
+        //If it is the case:
+        if(indexVAsSlashVariable >= 0) {
+            boolean found = false;
+            for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
+                T coefficient = dictionary.get(indexVAsSlashVariable).getConstantsLinearCombination()[i];
+                if(ring.compare(coefficient, ring.fromInteger(0)) != 0) {
+                    int variable = dictionary.get(indexVAsSlashVariable).getVariablesLinearCombination()[i];
+                    this.pivot(variable, indexVAsSlashVariable);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                System.out.printf("Warning!: equation of the form x_%d = 0\n", v);
+            }
+        }
+
+
         for(int j = 0; j < this.dictionary.size(); j++) {
             this.dictionary.get(j).removeVariable(v);
         }
         this.dictionary.getObjective().removeVariable(v);
+
+
         this.dictionary.getObjective().setConstant(previousObjective.getConstant());
 
         for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
