@@ -7,6 +7,7 @@ import fr.enslyon.LinearCombination.LinearCombination;
 import fr.enslyon.LinearCombination.LinearCombinationException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,26 +28,22 @@ public class SimplexBase<T> {
         this.ring = ring;
     }
     SimplexBase(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries,
-                DivisionRing<T> ring, Boolean debug) {
+                DivisionRing<T> ring) {
         this.ring = ring;
-        this.dictionary = new Dictionary<T>(objective, dictionaryEntries, debug);
-    }
-    SimplexBase(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring) {
-        this(objective, dictionaryEntries, ring, false);
+        this.dictionary = new Dictionary<T>(objective, dictionaryEntries);
     }
 
     //If the simplex is already solved and lead to an optimal solution, return it.
     public SimplexOutput<T> getOptimalSolution() throws DictionaryEntryException {
         if (this.isOptimalSolution()) {
+            HashMap<Integer, T> solution = new HashMap<Integer, T>();
 
-            List<ResultVariable<T>> solution = new LinkedList<ResultVariable<T>>();
             for (int j = 0; j < this.dictionary.size(); j++) {
                 if (this.dictionary.getInitialVariables().contains(dictionary.get(j).getVariable())) {
-                    solution.add(new ResultVariable<T>(dictionary.get(j).getVariable(),
-                            dictionary.get(j).getConstant()));
+                    solution.put(dictionary.get(j).getVariable(), dictionary.get(j).getConstant());
                 }
             }
-            return new OptimalSolution<T>(this.dictionary.getObjective().getConstant(), solution);
+            return new OptimalSolution<T>(ring, this.dictionary.getObjective().getConstant(), solution);
         } else {
             throw new DictionaryEntryException("The l.p. is not in a state corresponding to an optimal solution");
         }

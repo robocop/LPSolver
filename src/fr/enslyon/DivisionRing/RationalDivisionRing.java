@@ -31,6 +31,11 @@ public class RationalDivisionRing implements DivisionRing<RationalNumber> {
     }
 
     @Override
+    public RationalNumber fromString(String n) {
+        return new RationalNumber(Double.valueOf(n));
+    }
+
+    @Override
     public int compare(RationalNumber x, RationalNumber y) {
         long a = x.getNominator() * y.getDenominator();
         long b = x.getDenominator() * y.getNominator();

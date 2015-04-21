@@ -7,8 +7,6 @@ import fr.enslyon.LinearCombination.LinearCombination;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class SimplexTest {
 
@@ -51,28 +49,12 @@ public class SimplexTest {
 
 
         org.junit.Assert.assertTrue(solution instanceof OptimalSolution);
-        RationalNumber value = ((OptimalSolution<RationalNumber>) solution).getValue();
-        org.junit.Assert.assertEquals(ring.fromInteger(11), value);
+        OptimalSolution<RationalNumber> optS = (OptimalSolution<RationalNumber>) solution;
 
-        List<ResultVariable<RationalNumber>> solutionValues = ((OptimalSolution<RationalNumber>) solution).getSolution();
-        List<ResultVariable<RationalNumber>> expectedSolution = new LinkedList<ResultVariable<RationalNumber>>();
+        org.junit.Assert.assertEquals(ring.fromInteger(11), optS.getValue());
 
-        expectedSolution.add(new ResultVariable(0, ring.fromInteger(4)));
-        expectedSolution.add(new ResultVariable(1, ring.fromInteger(3)));
-
-        int variablesCompared = 0;
-        for(ResultVariable v1: expectedSolution) {
-            for(ResultVariable v2: solutionValues) {
-                if(v1.getVariable() == v2.getVariable()) {
-                    org.junit.Assert.assertEquals(v1.getValue(), v2.getValue());
-                    variablesCompared++;
-                }
-            }
-        }
-
-        org.junit.Assert.assertEquals(2, variablesCompared);
-
-
+        org.junit.Assert.assertEquals(ring.fromInteger(4), optS.getVariableValue(0));
+        org.junit.Assert.assertEquals(ring.fromInteger(3), optS.getVariableValue(1));
     }
 
     @Test
@@ -117,11 +99,11 @@ public class SimplexTest {
 
         org.junit.Assert.assertEquals(ring.fromInteger(0), ((OptimalSolution) vertex).getValue());
 
-        ResultVariable<RationalNumber> v0 = ((OptimalSolution<RationalNumber>) vertex).getSolution().get(0);
-        ResultVariable<RationalNumber> v1 = ((OptimalSolution<RationalNumber>) vertex).getSolution().get(1);
+        RationalNumber v0 = ((OptimalSolution<RationalNumber>) vertex).getVariableValue(0);
+        RationalNumber v1 = ((OptimalSolution<RationalNumber>) vertex).getVariableValue(1);
 
-        org.junit.Assert.assertEquals(ring.fromInteger(2), v0.getValue());
-        org.junit.Assert.assertEquals(ring.fromInteger(2), v1.getValue());
+        org.junit.Assert.assertEquals(ring.fromInteger(2), v0);
+        org.junit.Assert.assertEquals(ring.fromInteger(2), v1);
 
 
     }

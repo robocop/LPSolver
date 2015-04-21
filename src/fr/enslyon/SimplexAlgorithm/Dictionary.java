@@ -16,11 +16,14 @@ public class Dictionary<T> {
     private Set<Integer> initialVariables;
     Boolean debug = false;
 
-    public Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, Boolean debug) {
+    public Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries) {
         this.objective = objective;
         this.dictionaryEntries = dictionaryEntries;
         this.buildInitialVariables();
-        this.debug = debug;
+    }
+
+    public void setDebug(boolean debugValue) {
+        this.debug = debugValue;
     }
 
     public DictionaryEntry<T> get(int j) {

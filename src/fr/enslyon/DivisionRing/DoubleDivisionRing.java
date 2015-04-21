@@ -30,6 +30,11 @@ public class DoubleDivisionRing implements DivisionRing<Double> {
     }
 
     @Override
+    public Double fromString(String n) {
+        return Double.valueOf(n);
+    }
+
+    @Override
     public int compare(Double x, Double y) {
         double err = 1.0E-10;
         double delta = x-y;

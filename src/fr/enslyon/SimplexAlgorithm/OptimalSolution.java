@@ -1,23 +1,27 @@
 package fr.enslyon.SimplexAlgorithm;
 
-import java.util.List;
+import fr.enslyon.DivisionRing.DivisionRing;
+
+import java.util.HashMap;
 
 /**
  * Created by quentin on 30/03/15.
  */
 public class OptimalSolution<T> implements SimplexOutput<T> {
     T value;
-    List<ResultVariable<T>> solution;
+    HashMap<Integer, T> solution;
+    DivisionRing<T> ring;
 
-    OptimalSolution(T value, List<ResultVariable<T>> solution) {
+    OptimalSolution(DivisionRing<T> ring, T value, HashMap<Integer, T> solution) {
+        this.ring = ring;
         this.value = value;
         this.solution = solution;
     }
     @Override
     public void print() {
         System.out.println("Optimal solution: z = " + this.value.toString());
-        for(ResultVariable e: solution) {
-            System.out.printf("x_%d = %s\n", e.getVariable(), e.getValue().toString());
+        for(Integer var: this.solution.keySet()) {
+            System.out.printf("x_%d = %s\n", var, solution.get(var).toString());
         }
     }
 
@@ -25,7 +29,10 @@ public class OptimalSolution<T> implements SimplexOutput<T> {
         return value;
     }
 
-    public List<ResultVariable<T>> getSolution() {
-        return this.solution;
+    public T getVariableValue(int variable) {
+        if(solution.containsKey(variable))
+            return solution.get(variable);
+        else
+            return ring.fromInteger(0);
     }
 }

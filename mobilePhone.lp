@@ -1,4 +1,4 @@
-MINIMIZE
+MAXIMIZE
 netprofit1 + netprofit2 + netprofit3 + netprofit4
 SUBJECT TO
 builders1 + teachers1 + sleepers1 = 40
@@ -14,7 +14,7 @@ netprofit3 - 550 builders3 + 200 builders3 + 200 teachers3 + 200 sleepers3 + 300
 builders4 + teachers4 + sleepers4  - 3 teachers1 - 3 teachers2 - 3 teachers3 = 40
 netprofit4 - 450 builders4 + 200 builders4 + 200 teachers4 + 200 sleepers4 + 300 teachers4 = 0
 
-50 builders1 + 50 builders2 + 50 builders3 + 50 builders4 = 20000
+50 builders1 + 50 builders2 + 50 builders3 + 50builders4 = 20000
 
 
 

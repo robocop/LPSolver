@@ -20,10 +20,6 @@ public class Simplex<T> extends SimplexBase<T> {
     public Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring) {
         super(objective, dictionaryEntries, ring);
     }
-    public Simplex(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries, DivisionRing<T> ring,
-                   Boolean debug) {
-        super(objective, dictionaryEntries, ring, debug);
-    }
 
     public SimplexOutput<T> solve() throws DictionaryEntryException, LinearCombinationException {
         if (!this.checkConstantsPositivity()) {
