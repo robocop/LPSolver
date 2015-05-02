@@ -76,8 +76,9 @@ public class SimplexBase<T> {
         Boolean solved = false;
         while (!solved) {
             solved = step();
-            if(!solved)
-                this.dictionary.print("---End of the step---\n");
+            if(!solved) {
+                this.dictionary.println("End of the step");
+            }
         }
         if (this.isOptimalSolution())
             return this.getOptimalSolution();
@@ -116,7 +117,7 @@ public class SimplexBase<T> {
         }
 
         int enteringVariable = this.getVariableWithPositiveConstant();
-        this.dictionary.print("Entering variable: x_" + enteringVariable + "\n");
+        this.dictionary.println("Entering variable: " + this.dictionary.printVariable(enteringVariable));
 
         if (this.isUnboundedSolution(enteringVariable)) {
             return true;
@@ -124,8 +125,10 @@ public class SimplexBase<T> {
 
         int i_dict_leaving = this.getIndexDictionaryLeavingVariable(enteringVariable);
 
-        this.dictionary.print("Dictionary leaving: " + i_dict_leaving + "\n");
-        this.dictionary.print("Leaving variable: x_" + dictionary.get(i_dict_leaving).getVariable() + "\n");
+        this.dictionary.println("Dictionary leaving: " + i_dict_leaving);
+        this.dictionary.println("Leaving variable: " +
+                this.dictionary.printVariable(dictionary.get(i_dict_leaving).getVariable()));
+
         this.pivot(enteringVariable, i_dict_leaving);
 
         return false;
@@ -136,23 +139,21 @@ public class SimplexBase<T> {
     // and in the objective
     protected void pivot(int enteringVariable, int indexDictionaryLeaving) throws LinearCombinationException {
         //We permute the leading variable and the entering variable:
-        this.dictionary.print(
-                String.format("Permuting x_%d and x_%d in %d\n", enteringVariable,
-                    this.dictionary.get(indexDictionaryLeaving).getVariable(), indexDictionaryLeaving)
+        this.dictionary.println(
+                String.format("Permuting %s and %s in %d: ",
+                        this.dictionary.printVariable(enteringVariable),
+                        this.dictionary.printVariable(this.dictionary.get(indexDictionaryLeaving).getVariable()),
+                        indexDictionaryLeaving)
         );
 
         this.dictionary.get(indexDictionaryLeaving).swap_variable(enteringVariable);
-        this.dictionary.printDictionaryEntry(indexDictionaryLeaving);
-
-
         for(int i = 0; i < this.dictionary.size(); i++) {
             if(i != indexDictionaryLeaving) {
                 this.dictionary.get(i).substitute(this.dictionary.get(indexDictionaryLeaving));
-                this.dictionary.printDictionaryEntry(i);
             }
         }
         this.dictionary.getObjective().substitute(this.dictionary.get(indexDictionaryLeaving));
-        this.dictionary.printObjective();
+        this.dictionary.printDictionary();
     }
 
     //Check that all the constants are positives in the dictionary

@@ -15,6 +15,7 @@ public class Dictionary<T> {
     private LinearCombination<T> objective;
     private Set<Integer> initialVariables;
     Boolean debug = false;
+    Boolean latex = false;
 
     public Dictionary(LinearCombination<T> objective, ArrayList<DictionaryEntry<T>> dictionaryEntries) {
         this.objective = objective;
@@ -24,6 +25,10 @@ public class Dictionary<T> {
 
     public void setDebug(boolean debugValue) {
         this.debug = debugValue;
+    }
+
+    public void setLatex(boolean latexValue) {
+        this.latex = latexValue;
     }
 
     public DictionaryEntry<T> get(int j) {
@@ -40,27 +45,80 @@ public class Dictionary<T> {
         return this.initialVariables;
     }
 
-    public void print(String message) {
-        if(debug) {
+    private void print(String message) {
+        if(debug || latex) {
             System.out.print(message);
         }
     }
 
-    public void printObjective() {
-        this.print("z = ");
-        this.print(this.objective.toString() + "\n");
+    public void println(String message) {
+        if(debug) {
+            print(message + "\n");
+        }
+        else if(latex) {
+            print(message + "\\newline\n");
+        }
     }
 
+    public void printObjective() {
+        if(debug) {
+            this.print("z = ");
+            this.print(this.objective.toString() + "\n");
+        }
+        else if(latex) {
+            this.print(String.format("$ z $  & = %s \n", this.latexFormatLinearCombination(this.objective)));
+        }
+    }
+
+    private String latexFormatLinearCombination(LinearCombination<T> lc) {
+        String r = String.format("& $%s$ ", lc.getConstant().toString());
+        for(int i = 0; i < lc.getNumberOfTerms(); i++) {
+            r += String.format("& + & $%s x_{%d}$ ", lc.getConstantsLinearCombination()[i],
+                    lc.getVariablesLinearCombination()[i]);
+        }
+        return r;
+    }
+    public String printVariable(int variable) {
+        if(latex)
+            return "$x_{" + variable + "}$";
+        else
+            return "x_" + variable;
+    }
+
+
+
     public void printDictionaryEntry(int j) {
-        this.print(this.get(j).toString() + "\n");
+        if(debug) {
+            this.print(this.get(j).toString() + "\n");
+        }
+        else if(latex) {
+            this.print(String.format("$ x_{%d} $ & = %s\n", this.get(j).getVariable(),
+                    this.latexFormatLinearCombination(this.get(j))));
+        }
     }
 
     public void printDictionary() {
-        for(int j = 0; j < this.dictionaryEntries.size(); j++) {
-            this.printDictionaryEntry(j);
+        if(debug) {
+            for (int j = 0; j < this.dictionaryEntries.size(); j++) {
+                this.printDictionaryEntry(j);
+            }
+            this.print("----------------------\n");
+            this.printObjective();
         }
-        this.print("----------------------\n");
-        this.printObjective();
+        else if(latex) {
+            String w = "";
+            for(int i = 0; i < 2*(this.objective.getNumberOfTerms()+1)+1; i++) {
+                w += "l ";
+            }
+            this.print("\\begin{tabular}{" + w + "}");
+            for (int j = 0; j < this.dictionaryEntries.size(); j++) {
+                this.printDictionaryEntry(j);
+                this.print("\\\\ \n");
+            }
+            this.print("\\hline\n");
+            this.printObjective();
+            this.println("\\end{tabular}");
+        }
     }
 
 

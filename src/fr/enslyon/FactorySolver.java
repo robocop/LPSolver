@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created by quentin on 21/04/15.
  */
 public class FactorySolver {
-    public static void solve(String pathFile, boolean debug, String method)
+    public static void solve(String pathFile, boolean debug, boolean latex, String method)
             throws IOException, LinearCombinationException, DictionaryEntryException {
         if(method.equals("rationals")) {
             RationalDivisionRing ring = new RationalDivisionRing();
@@ -27,6 +27,7 @@ public class FactorySolver {
             lpConverter.computeDictionary();
             SimplexEncapsulation<RationalNumber> simplexEncapsulation = lpConverter.getLinearProgramEncapsulation();
             simplexEncapsulation.setDebug(debug);
+            simplexEncapsulation.setLatex(latex);
             simplexEncapsulation.solve();
         }
 
@@ -40,6 +41,7 @@ public class FactorySolver {
             lpConverter.computeDictionary();
             SimplexEncapsulation<Double> simplexEncapsulation = lpConverter.getLinearProgramEncapsulation();
             simplexEncapsulation.setDebug(debug);
+            simplexEncapsulation.setLatex(latex);
             simplexEncapsulation.solve();
         }
     }

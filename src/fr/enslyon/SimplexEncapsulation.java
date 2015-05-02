@@ -17,6 +17,7 @@ import java.util.HashSet;
 public class SimplexEncapsulation<T> {
     private boolean isObjectiveMaximize = true;
     public boolean debug = false;
+    public boolean latex = false;
 
     private HashSet<String> variables;
     private HashMap<String, Integer> variablesIndex = new HashMap<String, Integer>();
@@ -35,6 +36,13 @@ public class SimplexEncapsulation<T> {
             this.dictionary.setDebug(debugValue);
         }
     }
+    public void setLatex(boolean latexValue) {
+        this.latex = latexValue;
+        if(this.dictionary!=null) {
+            this.dictionary.setLatex(latexValue);
+        }
+    }
+
     public void setMinimizeObjective() {
         this.isObjectiveMaximize = false;
     }
@@ -58,6 +66,11 @@ public class SimplexEncapsulation<T> {
     }
 
     public void solve() throws LinearCombinationException, DictionaryEntryException {
+        if(latex) {
+            System.out.println("\\documentclass[10pt, landscape]{article}");
+            System.out.println("\\usepackage[margin=0.5cm]{geometry}");
+            System.out.println("\\begin{document}");
+        }
         if(debug) {
             System.out.println(linearProgram.toString() + "\n");
         }
@@ -72,8 +85,12 @@ public class SimplexEncapsulation<T> {
             solution.print();
             System.out.println();
         }
-
-        this.printSolution(solution);
+        if(latex) {
+            System.out.println("\\end{document}");
+        }
+        if(!latex) {
+            this.printSolution(solution);
+        }
     }
 
     /*

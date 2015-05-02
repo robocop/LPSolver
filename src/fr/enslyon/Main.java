@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Main {
     public static void printUsage() {
-        System.out.println("Usage: ./toto file.lp [-d | -h | -double]");
+        System.out.println("Usage: ./toto file.lp [-d | -h | -double | -rationals]");
     }
     public static void main(String[] args)
         throws DictionaryEntryException, LinearCombinationException
@@ -22,26 +22,31 @@ public class Main {
             String ring = "rationals";
 
             boolean debug = false;
-            for(int j = 0; j < args.length; j++) {
-                if (args[j].equals("-debug") || args[j].equals("-d") || args[j].equals("--debug")) {
+            boolean latex = false;
+
+            for(String s:args) {
+                if (s.equals("-debug") || s.equals("-d") || s.equals("--debug")) {
                     debug = true;
                 }
-                else if (args[j].equals("-help") || args[j].equals("-h") || args[j].equals("--help")) {
+                else if (s.equals("-latex") || s.equals("-l") || s.equals("--latex")) {
+                    latex = true;
+                }
+                else if (s.equals("-help") || s.equals("-h") || s.equals("--help")) {
                     printUsage();
                     return;
                 }
-                else if (args[j].equals("-double")|| args[j].equals("--double")) {
+                else if (s.equals("-double")|| s.equals("--double")) {
                     ring = "double";
                 }
-                else if (args[j].equals("-rationals")|| args[j].equals("--rationals") || args[j].equals("-r")) {
+                else if (s.equals("-rationals")|| s.equals("--rationals") || s.equals("-r")) {
                     ring = "rationals";
                 }
                 else {
-                    pathFile = args[j];
+                    pathFile = s;
                 }
             }
 
-            FactorySolver.solve(pathFile, debug, ring);
+            FactorySolver.solve(pathFile, debug, latex, ring);
 
         }
         catch (IOException e) {
