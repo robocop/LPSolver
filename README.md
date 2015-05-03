@@ -32,7 +32,7 @@ To produce a pdf (only, of course, for small instances)
 -------------------------------------------
 
 
-    ./pdf file.lp [OPTIONS]
+    ./totoprint file.lp [OPTIONS]
 
     It creates a pdf file ```out.pdf```
 
@@ -42,6 +42,7 @@ The OPTIONS are the following:
     * --double  -> use doubles to do the computation
     * --rationals -> use rationals
     * --latex -> output a latex file
+    * --debug -> output every steps of the simplex algorithm
 
 
 Features
