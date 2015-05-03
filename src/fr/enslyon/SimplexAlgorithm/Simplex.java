@@ -48,10 +48,10 @@ public class Simplex<T> extends SimplexBase<T> {
 
         this.newObjective();
 
-        this.dictionary.println("New objective, new dictionary:");
-        this.dictionary.printDictionary();
+        this.dictionary.print().printMessage("New objective, new dictionary:");
+        this.dictionary.print().printDictionary(dictionary);
 
-        this.dictionary.println("First illegal pivot:");
+        this.dictionary.print().printMessage("First illegal pivot:");
         this.fistIllegalPivot(variableAdded);
 
         return this.solve();
@@ -67,7 +67,7 @@ public class Simplex<T> extends SimplexBase<T> {
     // when we try to find a point in the domain)
     private int addNewVariablesSetToOne() throws DictionaryEntryException {
         int v = this.dictionary.getObjective().addVariable(ring.fromInteger(-1));
-        this.dictionary.println("Adding variable " + this.dictionary.printVariable(v));
+        this.dictionary.print().printMessage("Adding variable " + this.dictionary.print().formatVariable(v));
         for(int j = 0; j < this.dictionary.size(); j++) {
             int vj = this.dictionary.get(j).addVariable(ring.fromInteger(1));
             if(vj != v) {
@@ -122,9 +122,9 @@ public class Simplex<T> extends SimplexBase<T> {
         if(indexVAsSlashVariable >= 0) {
             boolean found = false;
             for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
-                T coefficient = dictionary.get(indexVAsSlashVariable).getConstantsLinearCombination()[i];
+                T coefficient = dictionary.get(indexVAsSlashVariable).getConstantById(i);
                 if(ring.compare(coefficient, ring.fromInteger(0)) != 0) {
-                    int variable = dictionary.get(indexVAsSlashVariable).getVariablesLinearCombination()[i];
+                    int variable = dictionary.get(indexVAsSlashVariable).getVariableById(i);
                     this.pivot(variable, indexVAsSlashVariable);
                     found = true;
                     break;
@@ -145,8 +145,8 @@ public class Simplex<T> extends SimplexBase<T> {
         this.dictionary.getObjective().setConstant(previousObjective.getConstant());
 
         for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
-            int variable = previousObjective.getVariablesLinearCombination()[i];
-            T scalar = previousObjective.getConstantsLinearCombination()[i];
+            int variable = previousObjective.getVariableById(i);
+            T scalar = previousObjective.getConstantById(i);
 
             int indexDictionary = this.getIndexDictionary(variable);
             if(indexDictionary >= 0) {
@@ -160,8 +160,8 @@ public class Simplex<T> extends SimplexBase<T> {
             }
         }
 
-        this.dictionary.println("New objective:");
-        this.dictionary.printDictionary();
+        this.dictionary.print().printMessage("New objective:");
+        this.dictionary.print().printDictionary(dictionary);
     }
 
     private int getIndexDictionary(int variable) {

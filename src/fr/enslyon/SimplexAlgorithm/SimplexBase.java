@@ -30,6 +30,7 @@ public class SimplexBase<T> {
                 DivisionRing<T> ring) {
         this.ring = ring;
         this.dictionary = new Dictionary<T>(objective, dictionaryEntries);
+        this.dictionary.setPrinter(new NoTraces<T>());
     }
 
     //If the simplex is already solved and lead to an optimal solution, return it.
@@ -55,8 +56,7 @@ public class SimplexBase<T> {
             HashMap<Integer, List<T>> solution = new HashMap<Integer, List<T>>();
             for (int i = 0; i < this.dictionary.size(); i++) {
                 int v = dictionary.get(i).getVariable();
-                T c = dictionary.get(i).getConstantsLinearCombination()
-                            [dictionary.get(i).getIndexVariable(entering_variable)];
+                T c = dictionary.get(i).getConstantById(dictionary.get(i).getIndexVariable(entering_variable));
                 List<T> values = new ArrayList<T>();
                 values.add(dictionary.get(i).getConstant());
                 values.add(c);
@@ -77,7 +77,7 @@ public class SimplexBase<T> {
         while (!solved) {
             solved = step();
             if(!solved) {
-                this.dictionary.println("End of the step");
+                this.dictionary.print().printMessage("End of the step");
             }
         }
         if (this.isOptimalSolution())
@@ -89,9 +89,8 @@ public class SimplexBase<T> {
 
     //Check if the simplex, in this current state corresponds to an optimal solution
     private Boolean isOptimalSolution() {
-        T[] zConstants = this.dictionary.getObjective().getConstantsLinearCombination();
-        for (T zConstant : zConstants) {
-            if (this.ring.compare(zConstant, ring.fromInteger(0)) > 0) {
+        for (int id = 0; id < dictionary.getObjective().getNumberOfTerms(); id++) {
+            if (this.ring.compare(dictionary.getObjective().getConstantById(id), ring.fromInteger(0)) > 0) {
                 return false;
             }
         }
@@ -102,7 +101,7 @@ public class SimplexBase<T> {
     private Boolean isUnboundedSolution(int entering_variable) {
         for(int i = 0; i < this.dictionary.size(); i++) {
             int index_entering_variable = dictionary.get(i).getIndexVariable(entering_variable);
-            if(this.ring.compare(dictionary.get(i).getConstantsLinearCombination()[index_entering_variable],
+            if(this.ring.compare(dictionary.get(i).getConstantById(index_entering_variable),
                     ring.fromInteger(0)) < 0) {
                 return false;
             }
@@ -117,7 +116,8 @@ public class SimplexBase<T> {
         }
 
         int enteringVariable = this.getVariableWithPositiveConstant();
-        this.dictionary.println("Entering variable: " + this.dictionary.printVariable(enteringVariable));
+        this.dictionary.print().printMessage("Entering variable: " +
+                this.dictionary.print().formatVariable(enteringVariable));
 
         if (this.isUnboundedSolution(enteringVariable)) {
             return true;
@@ -125,9 +125,9 @@ public class SimplexBase<T> {
 
         int i_dict_leaving = this.getIndexDictionaryLeavingVariable(enteringVariable);
 
-        this.dictionary.println("Dictionary leaving: " + i_dict_leaving);
-        this.dictionary.println("Leaving variable: " +
-                this.dictionary.printVariable(dictionary.get(i_dict_leaving).getVariable()));
+        this.dictionary.print().printMessage("Dictionary leaving: " + i_dict_leaving);
+        this.dictionary.print().printMessage("Leaving variable: " +
+                this.dictionary.print().formatVariable(dictionary.get(i_dict_leaving).getVariable()));
 
         this.pivot(enteringVariable, i_dict_leaving);
 
@@ -139,10 +139,10 @@ public class SimplexBase<T> {
     // and in the objective
     protected void pivot(int enteringVariable, int indexDictionaryLeaving) throws LinearCombinationException {
         //We permute the leading variable and the entering variable:
-        this.dictionary.println(
+        this.dictionary.print().printMessage(
                 String.format("Permuting %s and %s in %d: ",
-                        this.dictionary.printVariable(enteringVariable),
-                        this.dictionary.printVariable(this.dictionary.get(indexDictionaryLeaving).getVariable()),
+                        this.dictionary.print().formatVariable(enteringVariable),
+                        this.dictionary.print().formatVariable(this.dictionary.get(indexDictionaryLeaving).getVariable()),
                         indexDictionaryLeaving)
         );
 
@@ -153,7 +153,7 @@ public class SimplexBase<T> {
             }
         }
         this.dictionary.getObjective().substitute(this.dictionary.get(indexDictionaryLeaving));
-        this.dictionary.printDictionary();
+        this.dictionary.print().printDictionary(dictionary);
     }
 
     //Check that all the constants are positives in the dictionary
@@ -168,10 +168,9 @@ public class SimplexBase<T> {
 
     //Find a variable for which the coefficient associated in the objective function is positive
     private int getVariableWithPositiveConstant() {
-        T[] z_constants = this.dictionary.getObjective().getConstantsLinearCombination();
-        for(int i = 0; i < z_constants.length; i++) {
-            if (ring.compare(z_constants[i], ring.fromInteger(0)) > 0) {
-                return this.dictionary.getObjective().getVariablesLinearCombination()[i];
+        for(int i = 0; i < dictionary.getObjective().getNumberOfTerms(); i++) {
+            if (ring.compare(dictionary.getObjective().getConstantById(i), ring.fromInteger(0)) > 0) {
+                return this.dictionary.getObjective().getVariableById(i);
             }
         }
         return -1;
@@ -184,7 +183,7 @@ public class SimplexBase<T> {
         int index = -1; T ratio = ring.fromInteger(0);
         for(int i = 0; i < this.dictionary.size(); i++) {
             int index_entering_variable = dictionary.get(i).getIndexVariable(enteringVariable);
-            T c = dictionary.get(i).getConstantsLinearCombination()[index_entering_variable];
+            T c = dictionary.get(i).getConstantById(index_entering_variable);
             if (ring.compare(c, ring.fromInteger(0)) < 0) {
                 T new_ratio = ring.prod(dictionary.get(i).getConstant(), ring.inverse(ring.opposite(c)));
                 if (index == -1 || ring.compare(new_ratio,ratio) < 0) {
@@ -195,5 +194,4 @@ public class SimplexBase<T> {
         }
         return index;
     }
-
 }

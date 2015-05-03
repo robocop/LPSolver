@@ -32,15 +32,15 @@ public class SimplexEncapsulation<T> {
     }
     public void setDebug(boolean debugValue) {
         this.debug = debugValue;
-        if(this.dictionary!=null) {
-            this.dictionary.setDebug(debugValue);
-        }
+        if(debugValue)
+            this.dictionary.setPrinter(new DebugTraces<T>());
+        else
+            this.dictionary.setPrinter(new NoTraces<T>());
     }
     public void setLatex(boolean latexValue) {
         this.latex = latexValue;
-        if(this.dictionary!=null) {
-            this.dictionary.setLatex(latexValue);
-        }
+        if(latexValue)
+            this.dictionary.setPrinter(new DebugTraces<T>());
     }
 
     public void setMinimizeObjective() {

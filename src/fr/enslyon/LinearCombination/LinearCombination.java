@@ -33,11 +33,12 @@ public class LinearCombination<T> extends LinearCombinationBaseWithConstant<T> {
 
     public void add(LinearCombination<T> toAdd) {
         this.setConstant(this.ring.add(this.getConstant(), toAdd.getConstant()));
-        T[] constantsToAdd = toAdd.getConstantsLinearCombination();
+
         for(int i = 0; i < this.numberOfTerms; i++) {
-            int indexToAdd = toAdd.getIndexVariable(this.variablesLinearCombination[i]);
-            this.constantsLinearCombination[i] = this.ring.add(this.constantsLinearCombination[i],
-                        constantsToAdd[indexToAdd]);
+            int indexToAdd = toAdd.getIndexVariable(this.getVariableById(i));
+
+            this.constantsLinearCombination[i] = this.ring.add(this.getConstantById(i),
+                        toAdd.getConstantById(indexToAdd));
         }
     }
 
@@ -67,7 +68,7 @@ public class LinearCombination<T> extends LinearCombinationBaseWithConstant<T> {
             for (int i = 0; i < this.numberOfTerms; i++) {
                 //i is an index of toSubstitute
 
-                int v = toSubstitute.getVariablesLinearCombination()[i];
+                int v = toSubstitute.getVariableById(i);
                 int current_index_v= this.getIndexVariable(v);
 
                 if(current_index_v != -1) {
@@ -76,7 +77,7 @@ public class LinearCombination<T> extends LinearCombinationBaseWithConstant<T> {
 
                     this.constantsLinearCombination[current_index_v] = this.ring.add(
                             this.constantsLinearCombination[current_index_v],
-                            this.ring.prod(cstSubstitution, toSubstitute.getConstantsLinearCombination()[i]));
+                            this.ring.prod(cstSubstitution, toSubstitute.getConstantById(i)));
                 }
                 else {
                     //the variable v does not appears in the current equation
@@ -93,7 +94,7 @@ public class LinearCombination<T> extends LinearCombinationBaseWithConstant<T> {
                     //this.constantsLinearCombination[currentIndexToSubstitute] =
                     //        cstSubstitution * toSubstitute.getConstantsLinearCombination()[i];
                     this.constantsLinearCombination[currentIndexToSubstitute] = this.ring.prod(cstSubstitution,
-                            toSubstitute.getConstantsLinearCombination()[i]);
+                            toSubstitute.getConstantById(i));
                 }
             }
         }

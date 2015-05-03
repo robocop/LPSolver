@@ -26,12 +26,13 @@ public class LinearCombinationTest {
         equ1.substitute(equ2); // -> v_2 = 26.0  + 7.0 * v_0  + 5.0 * v_1  + 3.0 * v_4
 
         org.junit.Assert.assertArrayEquals("failure - variables not the same",
-                new int[]{0, 1, 4}, equ1.getVariablesLinearCombination());
+                new int[]{0, 1, 4},
+                new int[]{equ1.getVariableById(0), equ1.getVariableById(1), equ1.getVariableById(2)});
 
         org.junit.Assert.assertEquals(ring.fromInteger(26), equ1.getConstant());
 
         org.junit.Assert.assertArrayEquals("failure - constants not the same",
                 new RationalNumber[]{ring.fromInteger(7), ring.fromInteger(5), ring.fromInteger(3)},
-                equ1.getConstantsLinearCombination());
+                new RationalNumber[]{equ1.getConstantById(0), equ1.getConstantById(1), equ1.getConstantById(2)});
     }
 }

@@ -17,6 +17,7 @@ import java.io.IOException;
 public class FactorySolver {
     public static void solve(String pathFile, boolean debug, boolean latex, String method)
             throws IOException, LinearCombinationException, DictionaryEntryException {
+
         if(method.equals("rationals")) {
             RationalDivisionRing ring = new RationalDivisionRing();
             Parser<RationalNumber> parser = new Parser<RationalNumber>();

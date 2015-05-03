@@ -29,13 +29,16 @@ public class LinearCombinationBase<T> {
         this(l.getNumberOfTerms(), l.getMaximumIndexVariables());
 
         int[] variables = new int[l.getNumberOfTerms()];
-        System.arraycopy(l.getVariablesLinearCombination(), 0, variables, 0, l.getNumberOfTerms());
-
         @SuppressWarnings("unchecked")
         T[] constants = ( T[]) new Object[l.getNumberOfTerms()];
-        System.arraycopy(l.getConstantsLinearCombination(), 0, constants, 0, l.getNumberOfTerms());
+
+        for(int i = 0; i < l.getNumberOfTerms(); i++) {
+            variables[i] = l.getVariableById(i);
+            constants[i] = l.getConstantById(i);
+        }
 
         this.setVariables(variables);
+        this.buildReverseVariables();
         this.setConstants(constants);
 
     }
@@ -77,16 +80,12 @@ public class LinearCombinationBase<T> {
         return this.numberOfTerms;
     }
 
-    public T[] getConstantsLinearCombination() {
-        return this.constantsLinearCombination;
+    public T getConstantById(int id) {
+        return this.constantsLinearCombination[id];
     }
-    public int[] getVariablesLinearCombination() {
-        return this.variablesLinearCombination;
+    public int getVariableById(int id) {
+        return this.variablesLinearCombination[id];
     }
-
-
-
-
 
     public int getIndexVariable(int v) {
         return this.reverseVariables[v];
@@ -160,5 +159,4 @@ public class LinearCombinationBase<T> {
             this.reverseVariables[this.variablesLinearCombination[i]] = i;
         }
     }
-
 }
