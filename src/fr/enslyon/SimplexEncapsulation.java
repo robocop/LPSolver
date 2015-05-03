@@ -11,16 +11,18 @@ import java.util.HashSet;
 
 /**
  * Created by quentin on 21/04/15.
- * A ugly thing to fix...
+ * A class that contains all the parsed data, that called the solver and the printer
  */
 
 
 public class SimplexEncapsulation<T> {
+
+    private SimplexPrinter<T> printer;
+
     private boolean isObjectiveMaximize = true;
-    public boolean debug = false;
-    public boolean latex = false;
 
     private HashSet<String> variables;
+
     private HashMap<String, Integer> variablesIndex = new HashMap<String, Integer>();
     private HashMap<String, String> composedVariables = new HashMap<String, String>();
     private Dictionary<T> dictionary;
@@ -31,17 +33,22 @@ public class SimplexEncapsulation<T> {
     public SimplexEncapsulation(DivisionRing<T> ring) {
         this.ring = ring;
     }
-    public void setDebug(boolean debugValue) {
-        this.debug = debugValue;
-        if(debugValue)
-            this.dictionary.setPrinter(new DebugTraces<T>());
-        else
-            this.dictionary.setPrinter(new NoTraces<T>());
+
+
+    public void setDebug() {
+        this.dictionary.setPrinter(new DebugTraces<T>());
+        this.printer = new SimplexDebugPrinter<T>(isObjectiveMaximize, ring, variables,
+                variablesIndex, composedVariables);
     }
-    public void setLatex(boolean latexValue) {
-        this.latex = latexValue;
-        if(latexValue)
-            this.dictionary.setPrinter(new LatexTraces<T>());
+    public void setLatex() {
+        this.dictionary.setPrinter(new LatexTraces<T>());
+        this.printer = new SimplexLatexPrinter<T>(isObjectiveMaximize, ring, variables,
+                variablesIndex, composedVariables);
+    }
+    public void setNormal() {
+        this.dictionary.setPrinter(new NoTraces<T>());
+        this.printer = new SimplexNormalPrinter<T>(isObjectiveMaximize, ring, variables,
+                variablesIndex, composedVariables);
     }
 
     public void setMinimizeObjective() {
@@ -67,31 +74,14 @@ public class SimplexEncapsulation<T> {
     }
 
     public void solve() throws LinearCombinationException, DictionaryEntryException {
-        if(latex) {
-            System.out.println("\\documentclass[10pt, landscape]{article}");
-            System.out.println("\\usepackage[margin=0.5cm]{geometry}");
-            System.out.println("\\begin{document}");
-        }
-        if(debug) {
-            System.out.println(linearProgram.toString() + "\n");
-        }
-        if(debug) {
-            System.out.println("Variable assignations:");
-            System.out.println(variablesIndex.toString() + "\n");
-        }
+        printer.printHeader();
+        printer.printLinearProgram(linearProgram);
+
         Simplex<T> simplex = new Simplex<T>(this.dictionary, ring);
         SimplexOutput<T> solution = simplex.solve();
 
-        if(debug) {
-            solution.print();
-            System.out.println();
-        }
-        if(latex) {
-            System.out.println("\\end{document}");
-        }
-        if(!latex) {
-            this.printSolution(solution);
-        }
+        printer.printSolution(solution);
+        printer.printFooter();
     }
 
     /*
@@ -100,57 +90,5 @@ public class SimplexEncapsulation<T> {
      */
     public void addUnboundedVariable(String a, String b) {
         this.composedVariables.put(a, b);
-    }
-
-
-    private void printOptimalSolution(OptimalSolution<T> optimalSolution) {
-        T optimalValue = optimalSolution.getValue();
-        if(!isObjectiveMaximize) {
-            optimalValue = ring.opposite(optimalValue);
-        }
-        System.out.printf("Optimal solution: %s\n", optimalValue.toString());
-
-        for(String var: variables) {
-            T value = optimalSolution.getVariableValue(variablesIndex.get(var));
-            if(composedVariables.containsKey(var)) {
-                String var2 = composedVariables.get(var);
-                int index2 = variablesIndex.get(var2);
-                T value2 = optimalSolution.getVariableValue(index2);
-                value = ring.add(value, ring.opposite(value2));
-            }
-            System.out.printf("%s = %s\n", var, value);
-        }
-    }
-
-    private void printUnboundedSolution(UnboundedSolution<T> unboundedSolution) {
-        System.out.println("Unbounded solution");
-        for(String var: variables) {
-            T constantCoefficient = unboundedSolution.getConstant(variablesIndex.get(var));
-            T unboundedCoefficient = unboundedSolution.getUnboundedCoefficient(variablesIndex.get(var));
-
-            if (composedVariables.containsKey(var)) {
-                String var2 = composedVariables.get(var);
-                T constantCoefficient2 = unboundedSolution.getConstant(variablesIndex.get(var2));
-                T unboundedCoefficient2 = unboundedSolution.getUnboundedCoefficient(variablesIndex.get(var2));
-
-                constantCoefficient = ring.add(constantCoefficient, ring.opposite(constantCoefficient2));
-                unboundedCoefficient = ring.add(unboundedCoefficient, ring.opposite(unboundedCoefficient2));
-            }
-
-            System.out.printf("%s = %s + %s t\n", var, constantCoefficient.toString(), unboundedCoefficient.toString());
-        }
-        System.out.println("t >= 0");
-    }
-
-    private void printSolution(SimplexOutput<T> solution) {
-        if(solution instanceof OptimalSolution) {
-            this.printOptimalSolution((OptimalSolution<T>) solution);
-        }
-        else if(solution instanceof EmptyDomain) {
-            solution.print();
-        }
-        else if(solution instanceof UnboundedSolution) {
-            this.printUnboundedSolution((UnboundedSolution<T>) solution);
-        }
     }
 }

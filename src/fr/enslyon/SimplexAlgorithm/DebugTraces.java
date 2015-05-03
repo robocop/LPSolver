@@ -5,6 +5,7 @@ import fr.enslyon.LinearCombination.LinearCombination;
 
 /**
  * Created by quentin on 03/05/15.
+ * The traces in debug mode of the simplex algorithm
  */
 public class DebugTraces<T> implements PrintTraces<T> {
     @Override
@@ -17,7 +18,7 @@ public class DebugTraces<T> implements PrintTraces<T> {
         for (int j = 0; j < dictionary.size(); j++) {
             this.printDictionaryEntry(dictionary.get(j));
         }
-        System.out.println("----------------------\n");
+        System.out.println("----------------------");
         this.printObjective(dictionary.getObjective());
     }
 

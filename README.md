@@ -25,6 +25,8 @@ To produce a pdf (only, of course, for small instances)
 
     ./pdf file.lp [OPTIONS]
 
+    It creates a pdf file ```out.pdf```
+
 
 The OPTIONS are the following:
 
@@ -79,10 +81,13 @@ The class ```LinearProgramToSimplexEncapsulation``` takes a ```LinearProgram``` 
     ...
 
 
-In order to do that, LinearProgramToSimplexEncapsulation:
+In order to do that, ```LinearProgramToSimplexEncapsulation```:
 
-* remove useless inequalities
-* introduce new variables when initial variables are unbounded
 * transform a minimization problem into a maximization one.
+* remove useless bounds
+* transform greater inequalities into lesser inequalities
+* translate bounds on the form: x_i >= a into x_i >= 0
+* introduce new variables when initial variables are unbounded
+
 
 

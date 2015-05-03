@@ -28,8 +28,14 @@ public class FactorySolver {
             lpConverter.makeUniform();
             lpConverter.computeDictionary();
             SimplexEncapsulation<RationalNumber> simplexEncapsulation = lpConverter.getLinearProgramEncapsulation();
-            simplexEncapsulation.setDebug(debug);
-            simplexEncapsulation.setLatex(latex);
+
+            if(latex)
+                simplexEncapsulation.setLatex();
+            else if(debug)
+                simplexEncapsulation.setDebug();
+            else
+                simplexEncapsulation.setNormal();
+
             simplexEncapsulation.solve();
         }
 
@@ -42,8 +48,14 @@ public class FactorySolver {
             lpConverter.makeUniform();
             lpConverter.computeDictionary();
             SimplexEncapsulation<Double> simplexEncapsulation = lpConverter.getLinearProgramEncapsulation();
-            simplexEncapsulation.setDebug(debug);
-            simplexEncapsulation.setLatex(latex);
+
+            if(latex)
+                simplexEncapsulation.setLatex();
+            else if(debug)
+                simplexEncapsulation.setDebug();
+            else
+                simplexEncapsulation.setNormal();
+
             simplexEncapsulation.solve();
         }
     }

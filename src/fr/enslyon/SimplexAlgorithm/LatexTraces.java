@@ -5,6 +5,7 @@ import fr.enslyon.LinearCombination.LinearCombination;
 
 /**
  * Created by quentin on 03/05/15.
+ * The traces of the simplex algorithm for the latex output
  */
 public class LatexTraces<T> implements PrintTraces<T> {
     @Override
@@ -25,7 +26,7 @@ public class LatexTraces<T> implements PrintTraces<T> {
         }
         System.out.println("\\hline");
         this.printObjective(dictionary.getObjective());
-        System.out.println("\\end{tabular}");
+        System.out.println("\\end{tabular} \\newline");
     }
 
     @Override
