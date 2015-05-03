@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * Created by quentin on 21/04/15.
+ * Factory method
  */
 public class FactorySolver {
     public static void solve(String pathFile, boolean debug, boolean latex, String method)
@@ -46,6 +47,4 @@ public class FactorySolver {
             simplexEncapsulation.solve();
         }
     }
-
-
 }

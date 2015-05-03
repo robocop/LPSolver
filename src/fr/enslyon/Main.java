@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Main {
     public static void printUsage() {
-        System.out.println("Usage: ./toto file.lp [-d | -h | -double | -rationals]");
+        System.out.println("Usage: ./toto file.lp [-d | -h | -l | -double | -rationals | -latex]");
     }
     public static void main(String[] args)
         throws DictionaryEntryException, LinearCombinationException
