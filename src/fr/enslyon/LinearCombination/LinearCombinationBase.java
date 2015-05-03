@@ -10,7 +10,6 @@ public class LinearCombinationBase<T> {
     protected int[] variablesLinearCombination;
     protected int[] reverseVariables;
     protected T[] constantsLinearCombination;
-    protected  T constant;
 
 
     LinearCombinationBase(int numberOfTerms, int maximumIndexVariables) throws LinearCombinationException {
@@ -39,7 +38,6 @@ public class LinearCombinationBase<T> {
         this.setVariables(variables);
         this.setConstants(constants);
 
-        this.setConstant(l.getConstant());
     }
 
     public void setVariables(int[] variables) throws LinearCombinationException {
@@ -86,12 +84,7 @@ public class LinearCombinationBase<T> {
         return this.variablesLinearCombination;
     }
 
-    public T getConstant() {
-        return this.constant;
-    }
-    public void setConstant(T constant) {
-        this.constant = constant;
-    }
+
 
 
 
@@ -100,9 +93,11 @@ public class LinearCombinationBase<T> {
     }
 
     public String toString() {
-        String output = String.format("%s", this.getConstant().toString());
+        String output = "";
         for(int i = 0; i < numberOfTerms; i++) {
-            output += String.format(" + %s * x_%d",
+            if(i > 0)
+                output += " + ";
+            output += String.format("%s * x_%d",
                     this.constantsLinearCombination[i].toString(), this.variablesLinearCombination[i]);
         }
         return output;

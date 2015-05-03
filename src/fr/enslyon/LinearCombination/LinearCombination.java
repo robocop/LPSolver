@@ -5,7 +5,7 @@ import fr.enslyon.DivisionRing.DivisionRing;
 /**
  * Created by quentin on 14/04/15.
  */
-public class LinearCombination<T> extends LinearCombinationBase<T> {
+public class LinearCombination<T> extends LinearCombinationBaseWithConstant<T> {
     protected DivisionRing<T> ring;
 
     public LinearCombination(int numberOfTerms, int maximumIndexVariables, DivisionRing<T> ring)
