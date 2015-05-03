@@ -19,6 +19,15 @@ To launch it
     ./toto lp_examples/mobilePhone.lp -rationals -debug
 
 
+Efficient mode
+--------------
+
+To use it on large entries, use it with doubles:
+
+    time ./toto lp_examples/generated-100-10000.lp -double
+    ./toto lp_examples/generated-100-10000.lp -double  33.11s user 2.80s system 224% cpu 15.981 total
+
+
 To produce a pdf (only, of course, for small instances)
 -------------------------------------------
 
@@ -33,8 +42,6 @@ The OPTIONS are the following:
     * --double  -> use doubles to do the computation
     * --rationals -> use rationals
     * --latex -> output a latex file
-
-
 
 
 Features
@@ -56,7 +63,7 @@ The file ```Simplex.java``` implements the first phase (find an initial solution
 The main data structure is defined in the module ```LinearCombination```: it represents the dictionary entries.
 It based on native arrays (which are quite efficient, even in Java).
 It's a sparse structure for inequalities, and a compact structure for variables.
-Thank to this structure, the solver supports linear program with 100 variables and 10 000 inequalities.
+Thanks to this structure, the solver supports linear program with 100 variables and 10 000 inequalities.
 
 
 
