@@ -77,7 +77,7 @@ public class SimplexBase<T> {
         while (!solved) {
             solved = step();
             if(!solved) {
-                this.dictionary.print().printMessage("End of the step");
+                this.dictionary.printer().printMessage("End of the step");
             }
         }
         if (this.isOptimalSolution())
@@ -116,8 +116,8 @@ public class SimplexBase<T> {
         }
 
         int enteringVariable = this.getVariableWithPositiveConstant();
-        this.dictionary.print().printMessage("Entering variable: " +
-                this.dictionary.print().formatVariable(enteringVariable));
+        this.dictionary.printer().printMessage("Entering variable: " +
+                this.dictionary.printer().formatVariable(enteringVariable));
 
         if (this.isUnboundedSolution(enteringVariable)) {
             return true;
@@ -125,9 +125,9 @@ public class SimplexBase<T> {
 
         int i_dict_leaving = this.getIndexDictionaryLeavingVariable(enteringVariable);
 
-        this.dictionary.print().printMessage("Dictionary leaving: " + i_dict_leaving);
-        this.dictionary.print().printMessage("Leaving variable: " +
-                this.dictionary.print().formatVariable(dictionary.get(i_dict_leaving).getVariable()));
+        this.dictionary.printer().printMessage("Dictionary leaving: " + i_dict_leaving);
+        this.dictionary.printer().printMessage("Leaving variable: " +
+                this.dictionary.printer().formatVariable(dictionary.get(i_dict_leaving).getVariable()));
 
         this.pivot(enteringVariable, i_dict_leaving);
 
@@ -139,10 +139,10 @@ public class SimplexBase<T> {
     // and in the objective
     protected void pivot(int enteringVariable, int indexDictionaryLeaving) throws LinearCombinationException {
         //We permute the leading variable and the entering variable:
-        this.dictionary.print().printMessage(
+        this.dictionary.printer().printMessage(
                 String.format("Permuting %s and %s in %d: ",
-                        this.dictionary.print().formatVariable(enteringVariable),
-                        this.dictionary.print().formatVariable(this.dictionary.get(indexDictionaryLeaving).getVariable()),
+                        this.dictionary.printer().formatVariable(enteringVariable),
+                        this.dictionary.printer().formatVariable(this.dictionary.get(indexDictionaryLeaving).getVariable()),
                         indexDictionaryLeaving)
         );
 
@@ -153,7 +153,7 @@ public class SimplexBase<T> {
             }
         }
         this.dictionary.getObjective().substitute(this.dictionary.get(indexDictionaryLeaving));
-        this.dictionary.print().printDictionary(dictionary);
+        this.dictionary.printer().printDictionary(dictionary);
     }
 
     //Check that all the constants are positives in the dictionary

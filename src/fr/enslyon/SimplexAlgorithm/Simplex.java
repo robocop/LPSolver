@@ -48,10 +48,10 @@ public class Simplex<T> extends SimplexBase<T> {
 
         this.newObjective();
 
-        this.dictionary.print().printMessage("New objective, new dictionary:");
-        this.dictionary.print().printDictionary(dictionary);
+        this.dictionary.printer().printMessage("New objective, new dictionary:");
+        this.dictionary.printer().printDictionary(dictionary);
 
-        this.dictionary.print().printMessage("First illegal pivot:");
+        this.dictionary.printer().printMessage("First illegal pivot:");
         this.fistIllegalPivot(variableAdded);
 
         return this.solve();
@@ -67,7 +67,7 @@ public class Simplex<T> extends SimplexBase<T> {
     // when we try to find a point in the domain)
     private int addNewVariablesSetToOne() throws DictionaryEntryException {
         int v = this.dictionary.getObjective().addVariable(ring.fromInteger(-1));
-        this.dictionary.print().printMessage("Adding variable " + this.dictionary.print().formatVariable(v));
+        this.dictionary.printer().printMessage("Adding variable " + this.dictionary.printer().formatVariable(v));
         for(int j = 0; j < this.dictionary.size(); j++) {
             int vj = this.dictionary.get(j).addVariable(ring.fromInteger(1));
             if(vj != v) {
@@ -160,8 +160,8 @@ public class Simplex<T> extends SimplexBase<T> {
             }
         }
 
-        this.dictionary.print().printMessage("New objective:");
-        this.dictionary.print().printDictionary(dictionary);
+        this.dictionary.printer().printMessage("New objective:");
+        this.dictionary.printer().printDictionary(dictionary);
     }
 
     private int getIndexDictionary(int variable) {

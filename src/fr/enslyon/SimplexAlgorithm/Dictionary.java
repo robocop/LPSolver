@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * Created by quentin on 14/04/15.
+ * The structure that hold the dictionary
+ * The simplex algorithm manipulates it
  */
 public class Dictionary<T> {
     private ArrayList<DictionaryEntry<T>> dictionaryEntries;
@@ -25,7 +27,7 @@ public class Dictionary<T> {
     public void setPrinter(PrintTraces<T> printer) {
         this.printer = printer;
     }
-    public PrintTraces<T> print() {
+    public PrintTraces<T> printer() {
         return printer;
     }
 

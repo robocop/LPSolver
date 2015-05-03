@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 /**
  * Created by quentin on 21/04/15.
+ * A ugly thing to fix...
  */
 
 
@@ -40,7 +41,7 @@ public class SimplexEncapsulation<T> {
     public void setLatex(boolean latexValue) {
         this.latex = latexValue;
         if(latexValue)
-            this.dictionary.setPrinter(new DebugTraces<T>());
+            this.dictionary.setPrinter(new LatexTraces<T>());
     }
 
     public void setMinimizeObjective() {

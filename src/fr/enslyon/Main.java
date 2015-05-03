@@ -56,6 +56,5 @@ public class Main {
             System.err.println("Syntax error");
             System.err.println(e.getMessage());
         }
-
     }
 }
