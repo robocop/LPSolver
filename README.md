@@ -1,13 +1,10 @@
 A linear programming solver in Java.
 
 
-To install the solver:
+To compile the solver:
 ----------------------
 
-
-    git clone https://github.com/robocop/LPSolver.git
-    make
-   
+    make   
 
 To launch it
 ------------
