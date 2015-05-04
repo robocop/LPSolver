@@ -3,7 +3,7 @@ package fr.enslyon.LinearCombination;
 /**
  * Created by quentin on 02/05/15.
  */
-public class LinearCombinationBaseWithConstant<T> extends LinearCombinationBase<T> {
+public class LinearCombinationBaseWithConstant<T> extends LinearCombinationBaseAddAndRemoveVariables<T> {
     protected  T constant;
 
     LinearCombinationBaseWithConstant(int numberOfTerms, int maximumIndexVariables) throws LinearCombinationException {
@@ -25,6 +25,5 @@ public class LinearCombinationBaseWithConstant<T> extends LinearCombinationBase<
     public String toString() {
         return String.format("%s + %s", constant.toString(), super.toString());
     }
-
 
 }

@@ -8,7 +8,6 @@ public class LinearCombinationBase<T> {
     protected int numberOfTerms; //number of different terms in the equation
     protected int maximumIndexVariables; //the total number of variables is maximumIndexVariables
     protected int[] variablesLinearCombination;
-    protected int[] reverseVariables;
     protected T[] constantsLinearCombination;
 
 
@@ -38,7 +37,6 @@ public class LinearCombinationBase<T> {
         }
 
         this.setVariables(variables);
-        this.buildReverseVariables();
         this.setConstants(constants);
 
     }
@@ -50,7 +48,6 @@ public class LinearCombinationBase<T> {
         }
         else {
             this.variablesLinearCombination = variables;
-            this.buildReverseVariables();
         }
     }
     public void setConstants(T[] constants) throws LinearCombinationException {
@@ -61,16 +58,6 @@ public class LinearCombinationBase<T> {
         else {
             this.constantsLinearCombination = constants;
         }
-    }
-
-    public void setVariable(int variable, T value) {
-        int indexVariable = this.getIndexVariable(variable);
-        this.constantsLinearCombination[indexVariable] = value;
-    }
-
-    public T getVariable(int variable) {
-        int indexVariable = this.getIndexVariable(variable);
-        return this.constantsLinearCombination[indexVariable];
     }
 
     public int getMaximumIndexVariables() {
@@ -87,9 +74,6 @@ public class LinearCombinationBase<T> {
         return this.variablesLinearCombination[id];
     }
 
-    public int getIndexVariable(int v) {
-        return this.reverseVariables[v];
-    }
 
     public String toString() {
         String output = "";
@@ -100,63 +84,5 @@ public class LinearCombinationBase<T> {
                     this.constantsLinearCombination[i].toString(), this.variablesLinearCombination[i]);
         }
         return output;
-    }
-
-
-    public int addVariable(T constantAssociated) {
-        int[] variables = new int[this.numberOfTerms+1];
-        @SuppressWarnings("unchecked")
-        T[] constants = (T[]) new Object[this.numberOfTerms+1];
-
-        System.arraycopy(this.variablesLinearCombination, 0, variables, 0, this.numberOfTerms);
-        System.arraycopy(this.constantsLinearCombination, 0, constants, 0, this.numberOfTerms);
-
-        variables[this.numberOfTerms] = this.maximumIndexVariables;
-        constants[this.numberOfTerms] = constantAssociated;
-
-        this.numberOfTerms += 1;
-        this.maximumIndexVariables += 1;
-
-        this.variablesLinearCombination = variables;
-        this.constantsLinearCombination = constants;
-
-        this.buildReverseVariables();
-
-        return this.maximumIndexVariables-1;
-
-    }
-
-    public void removeVariable(int variable) {
-        int[] variables = new int[this.numberOfTerms-1];
-        @SuppressWarnings("unchecked")
-        T[] constants = (T[]) new Object[this.numberOfTerms-1];
-        int j = 0;
-        for(int i = 0; i < this.numberOfTerms; i++) {
-            if(this.variablesLinearCombination[i] != variable) {
-                variables[j] = this.variablesLinearCombination[i];
-                constants[j] = this.constantsLinearCombination[i];
-                j++;
-            }
-        }
-        this.numberOfTerms--;
-        this.variablesLinearCombination = variables;
-        this.constantsLinearCombination = constants;
-
-        this.buildReverseVariables();
-    }
-
-    private void buildReverseVariables() {
-        //build the array this.reverseVariables such that:
-        //this.reverseVariables[v] = i with this.variablesLinearCombination[i] = v if i >= 0
-        //this.reverseVariables[v] = -1 otherwise
-
-        this.reverseVariables = new int[this.maximumIndexVariables];
-        for(int v = 0; v < this.maximumIndexVariables; v++) {
-            this.reverseVariables[v] = -1;
-        }
-
-        for(int i = 0; i < this.numberOfTerms; i++) {
-            this.reverseVariables[this.variablesLinearCombination[i]] = i;
-        }
     }
 }
