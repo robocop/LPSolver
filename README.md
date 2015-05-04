@@ -24,6 +24,7 @@ To use it on large entries, use it with doubles:
     time ./toto lp_examples/generated-100-10000.lp -double
     
 Or:
+
     time ./totoopt lp_examples/generated-100-10000.lp
     
     
@@ -74,16 +75,16 @@ The classes ```Item```, ```Variables```, ```Bound```, ```Bounds```, ```Inequalit
 
 The class ```LinearProgramToSimplexEncapsulation``` takes a ```LinearProgram``` and make it uniform, ie on the following form:
 
-    Maximize z0+z1 * x1 + ...
+    Maximize z0 + z1 * x1 + ...
     
     s.t.:
-    a0 + a1 * x1 + ... <= c0
-    b0 + b1 * x1 + ... <= c1
+        a0 + a1 * x1 + ... <= c0
+        b0 + b1 * x1 + ... <= c1
     ...
     
     with:
-    x1 >= 0
-    x2 >= 0
+        x1 >= 0
+        x2 >= 0
     ...
 
 
@@ -92,7 +93,7 @@ In order to do that, ```LinearProgramToSimplexEncapsulation```:
 * transform a minimization problem into a maximization one.
 * remove useless bounds
 * transform greater inequalities into lesser inequalities
-* translate bounds on the form: x_i >= a into x_i >= 0
+* translate bounds on the form: ```x_i >= a``` into ```x_i >= 0```
 * introduce new variables when initial variables are unbounded
 
 
