@@ -47,7 +47,7 @@ The OPTIONS are the following:
     * --debug -> output every steps of the simplex algorithm
 
 
-## Features
+## How it works
 
 
 This solver supports arbitrary division ring.
