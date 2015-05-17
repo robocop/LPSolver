@@ -4,22 +4,23 @@ package fr.enslyon.DivisionRing;
  * Created by quentin on 14/04/15.
  */
 public class RationalNumber {
-    long a; long b;
+    final private long a;
+    final private long b;
     public RationalNumber(long a, long b) throws ArithmeticException{
-        this.a = this.sign(b) * a;
-        this.b = this.sign(b) * b;
-        if(this.b == 0) {
+        a = this.sign(b) * a;
+        b = this.sign(b) * b;
+        if(b == 0) {
             throw new ArithmeticException();
         }
-        long gcd = this.gcd(this.sign(this.a) * this.a, this.b);
-        this.a = this.a / gcd;
-        this.b = this.b / gcd;
+        long gcd = this.gcd(this.sign(a) * a, b);
+        this.a = a / gcd;
+        this.b = b / gcd;
     }
 
-    public RationalNumber(long x) {
-        this.a = x;
-        this.b = 1;
+    public RationalNumber(double x) {
+        this(Math.round(100000 * x), 100000);
     }
+
 
     public long getNominator() {
         return this.a;
@@ -28,15 +29,17 @@ public class RationalNumber {
         return this.b;
     }
 
+    @Override
     public String toString() {
         if(this.b > 1)
             return String.format("%d/%d", this.a, this.b);
         else
-            return String.format("%d", this.a);
+            return Long.toString(this.a);
     }
 
+    @Override
     public boolean equals(Object x) {
-        if(x instanceof RationalNumber) {
+        if(x !=  null && x instanceof RationalNumber) {
             RationalNumber rx = (RationalNumber) x;
             return (a == rx.getNominator()) && (b == rx.getDenominator());
         }
@@ -62,7 +65,4 @@ public class RationalNumber {
         }
     }
 
-    public RationalNumber(double x) {
-        this(Math.round(100000 * x), 100000);
-    }
  }

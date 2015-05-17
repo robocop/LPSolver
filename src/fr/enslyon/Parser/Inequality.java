@@ -28,7 +28,7 @@ public class Inequality<T> {
     public void scalarMultiplication(T scalar) {
         combination.scalarMultiplication(scalar);
         constant = ring.prod(constant, scalar);
-        if(ring.compare(scalar, ring.fromInteger(0)) < 0) {
+        if(ring.compare(scalar, ring.fromString("0")) < 0) {
             greater = !greater;
         }
     }
@@ -43,7 +43,7 @@ public class Inequality<T> {
     public void makeUniformConstant() {
         T nc = ring.add(this.getConstant(), ring.opposite(this.getCombination().getConstant()));
         this.setConstant(nc);
-        this.getCombination().setConstant(ring.fromInteger(0));
+        this.getCombination().setConstant(ring.fromString("0"));
     }
 
     /*

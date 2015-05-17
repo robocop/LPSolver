@@ -33,6 +33,6 @@ public class OptimalSolution<T> implements SimplexOutput<T> {
         if(solution.containsKey(variable))
             return solution.get(variable);
         else
-            return ring.fromInteger(0);
+            return ring.fromString("0");
     }
 }

@@ -77,7 +77,7 @@ public class ParserVisitor<T> extends InputBaseVisitor<Value<T>> {
         return new Value<T>(new Item<T>(value));
     }
     @Override public Value<T> visitVariableItem(@NotNull InputParser.VariableItemContext ctx) {
-        return new Value<T>(new Item<T>(ctx.Variable().getText(), ring.fromInteger(1)));
+        return new Value<T>(new Item<T>(ctx.Variable().getText(), ring.fromString("1")));
     }
     @Override public Value<T> visitFirstItem(InputParser.FirstItemContext ctx) {
         Item<T> item = visit(ctx.item()).asItem();

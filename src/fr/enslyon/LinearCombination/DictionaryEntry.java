@@ -30,6 +30,7 @@ public class DictionaryEntry<T> extends LinearCombination<T> {
         return variable;
     }
 
+    @Override
     public String toString() {
         return String.format("x_%d = %s", this.variable, super.toString());
     }
@@ -43,7 +44,7 @@ public class DictionaryEntry<T> extends LinearCombination<T> {
 
 
         this.variablesLinearCombination[index_variable] = this.variable;
-        this.constantsLinearCombination[index_variable] = this.ring.fromInteger(-1);
+        this.constantsLinearCombination[index_variable] = this.ring.fromString("-1");
         this.reverseVariables[variable] = -1;
         this.reverseVariables[this.variable] = index_variable;
 
@@ -51,8 +52,9 @@ public class DictionaryEntry<T> extends LinearCombination<T> {
 
         for(int i = 0; i < numberOfTerms; i++) {
             //this.constantsLinearCombination[i] /= -c_variable :
+            T c_variableOpposite = this.ring.opposite(c_variable);
             this.constantsLinearCombination[i] = this.ring.prod(this.constantsLinearCombination[i],
-                    this.ring.inverse(this.ring.opposite(c_variable)));
+                    this.ring.inverse(c_variableOpposite));
         }
     }
 }

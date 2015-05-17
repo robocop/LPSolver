@@ -90,7 +90,7 @@ public class SimplexBase<T> {
     //Check if the simplex, in this current state corresponds to an optimal solution
     private Boolean isOptimalSolution() {
         for (int id = 0; id < dictionary.getObjective().getNumberOfTerms(); id++) {
-            if (this.ring.compare(dictionary.getObjective().getConstantById(id), ring.fromInteger(0)) > 0) {
+            if (this.ring.compare(dictionary.getObjective().getConstantById(id), ring.fromString("0")) > 0) {
                 return false;
             }
         }
@@ -102,7 +102,7 @@ public class SimplexBase<T> {
         for(int i = 0; i < this.dictionary.size(); i++) {
             int index_entering_variable = dictionary.get(i).getIndexVariable(entering_variable);
             if(this.ring.compare(dictionary.get(i).getConstantById(index_entering_variable),
-                    ring.fromInteger(0)) < 0) {
+                    ring.fromString("0")) < 0) {
                 return false;
             }
         }
@@ -159,7 +159,7 @@ public class SimplexBase<T> {
     //Check that all the constants are positives in the dictionary
     protected Boolean checkConstantsPositivity() {
         for(int i = 0; i < this.dictionary.size(); i++) {
-            if(ring.compare(dictionary.get(i).getConstant(), ring.fromInteger(0)) < 0) {
+            if(ring.compare(dictionary.get(i).getConstant(), ring.fromString("0")) < 0) {
                 return false;
             }
         }
@@ -169,7 +169,7 @@ public class SimplexBase<T> {
     //Find a variable for which the coefficient associated in the objective function is positive
     private int getVariableWithPositiveConstant() {
         for(int i = 0; i < dictionary.getObjective().getNumberOfTerms(); i++) {
-            if (ring.compare(dictionary.getObjective().getConstantById(i), ring.fromInteger(0)) > 0) {
+            if (ring.compare(dictionary.getObjective().getConstantById(i), ring.fromString("0")) > 0) {
                 return this.dictionary.getObjective().getVariableById(i);
             }
         }
@@ -180,11 +180,11 @@ public class SimplexBase<T> {
     //Find one for which -the constant / a is minimum
 
     private int getIndexDictionaryLeavingVariable(int enteringVariable) {
-        int index = -1; T ratio = ring.fromInteger(0);
+        int index = -1; T ratio = ring.fromString("0");
         for(int i = 0; i < this.dictionary.size(); i++) {
             int index_entering_variable = dictionary.get(i).getIndexVariable(enteringVariable);
             T c = dictionary.get(i).getConstantById(index_entering_variable);
-            if (ring.compare(c, ring.fromInteger(0)) < 0) {
+            if (ring.compare(c, ring.fromString("0")) < 0) {
                 T new_ratio = ring.prod(dictionary.get(i).getConstant(), ring.inverse(ring.opposite(c)));
                 if (index == -1 || ring.compare(new_ratio,ratio) < 0) {
                     index = i;

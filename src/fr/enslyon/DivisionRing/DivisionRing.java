@@ -8,7 +8,7 @@ public interface DivisionRing<T> {
     public T prod(T x, T y);
     public T inverse(T x);
     public T opposite(T x);
-    public T fromInteger(int n);
     public T fromString(String n);
-    public int compare(T x, T y);
+
+    public int compare(T a, T b);
 }

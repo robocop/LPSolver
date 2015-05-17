@@ -38,7 +38,7 @@ public class SyntacticLinearCombination<T> {
             return combination.get("");
         }
         else {
-            return ring.fromInteger(0);
+            return ring.fromString("0");
         }
     }
     public void setOrUpdateConstant(T c) {
@@ -70,7 +70,7 @@ public class SyntacticLinearCombination<T> {
 
     public String toString() {
         String output = "";
-        if(combination.containsKey("") && ring.compare(combination.get(""), ring.fromInteger(0)) != 0) {
+        if(combination.containsKey("") && ring.compare(combination.get(""), ring.fromString("0")) != 0) {
             output += combination.get("").toString();
         }
         for(String var: combination.keySet()) {
@@ -78,10 +78,10 @@ public class SyntacticLinearCombination<T> {
                 if(!output.equals("")) {
                     output += " + ";
                 }
-                if(ring.compare(combination.get(var), ring.fromInteger(1)) == 0) {
+                if(ring.compare(combination.get(var), ring.fromString("1")) == 0) {
                     output += var;
                 }
-                else if(ring.compare(combination.get(var), ring.fromInteger(-1)) == 0) {
+                else if(ring.compare(combination.get(var), ring.fromString("-1")) == 0) {
                     output += String.format("-%s", var);
                 }
                 else {

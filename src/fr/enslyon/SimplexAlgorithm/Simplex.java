@@ -29,7 +29,7 @@ public class Simplex<T> extends SimplexBase<T> {
             SimplexOutput<T> auxiliarySolution = this.solveAuxiliaryLP(variableAdded);
 
             if(auxiliarySolution instanceof OptimalSolution) {
-                if(ring.compare(((OptimalSolution<T>) auxiliarySolution).getValue(), ring.fromInteger(0)) != 0)
+                if(ring.compare(((OptimalSolution<T>) auxiliarySolution).getValue(), ring.fromString("0")) != 0)
                     return new EmptyDomain<T>();
                 else {
                     this.dictionaryProjection(variableAdded, previousObjective);
@@ -66,10 +66,10 @@ public class Simplex<T> extends SimplexBase<T> {
     //Add a variable in each dictionary set to 1 (during the first phase of the simplex,
     // when we try to find a point in the domain)
     private int addNewVariablesSetToOne() throws DictionaryEntryException {
-        int v = this.dictionary.getObjective().addVariable(ring.fromInteger(-1));
+        int v = this.dictionary.getObjective().addVariable(ring.fromString("-1"));
         this.dictionary.printer().printMessage("Adding variable " + this.dictionary.printer().formatVariable(v));
         for(int j = 0; j < this.dictionary.size(); j++) {
-            int vj = this.dictionary.get(j).addVariable(ring.fromInteger(1));
+            int vj = this.dictionary.get(j).addVariable(ring.fromString("1"));
             if(vj != v) {
                 throw new DictionaryEntryException("Dimension problem when trying to add a variable: "
                         + "the dictionary and the objective do not have the same dimension");
@@ -83,9 +83,9 @@ public class Simplex<T> extends SimplexBase<T> {
         @SuppressWarnings("unchecked")
         T[] newObjectiveConstants = (T[]) new Object[this.dictionary.getObjective().getNumberOfTerms()];
         for(int i = 0; i < newObjectiveConstants.length-1; i++) {
-            newObjectiveConstants[i] = ring.fromInteger(0);
+            newObjectiveConstants[i] = ring.fromString("0");
         }
-        newObjectiveConstants[newObjectiveConstants.length-1] = ring.fromInteger(-1);
+        newObjectiveConstants[newObjectiveConstants.length-1] = ring.fromString("-1");
         this.dictionary.getObjective().setConstants(newObjectiveConstants);
     }
 
@@ -123,7 +123,7 @@ public class Simplex<T> extends SimplexBase<T> {
             boolean found = false;
             for(int i = 0; i < this.dictionary.getObjective().getNumberOfTerms(); i++) {
                 T coefficient = dictionary.get(indexVAsSlashVariable).getConstantById(i);
-                if(ring.compare(coefficient, ring.fromInteger(0)) != 0) {
+                if(ring.compare(coefficient, ring.fromString("0")) != 0) {
                     int variable = dictionary.get(indexVAsSlashVariable).getVariableById(i);
                     this.pivot(variable, indexVAsSlashVariable);
                     found = true;
