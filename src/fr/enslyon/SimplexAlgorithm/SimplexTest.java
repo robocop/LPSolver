@@ -16,29 +16,49 @@ public class SimplexTest {
 
         // Max 2x_0 + x_1
         LinearCombination<RationalNumber> objective = new LinearCombination<RationalNumber>(2, 5, ring);
+<<<<<<< HEAD
         objective.setConstant(ring.fromInteger(0));
         objective.setConstants(new RationalNumber[]{ring.fromInteger(2), ring.fromInteger(1)});
+=======
+        objective.setConstant(ring.fromString("0"));
+        objective.setConstants(new RationalNumber[]{ring.fromString("2"), ring.fromString("1")});
+>>>>>>> review2
         objective.setVariables(new int[]{0, 1});
 
         //st -2x_0 + x_1 <= -2
         // x_2 = -2 + 2x_0 - x_1
         DictionaryEntry<RationalNumber> equ1 = new DictionaryEntry<RationalNumber>(2, 5, ring, 2);
+<<<<<<< HEAD
         equ1.setConstant(ring.fromInteger(-2));
         equ1.setConstants(new RationalNumber[]{ring.fromInteger(2), ring.fromInteger(-1)});
+=======
+        equ1.setConstant(ring.fromString("-2"));
+        equ1.setConstants(new RationalNumber[]{ring.fromString("2"), ring.fromString("-1")});
+>>>>>>> review2
         equ1.setVariables(new int[]{0, 1});
 
         //st x_0 - 2 x_1 <= -2
         // x_3 = -2 - x_0 + 2x_1
         DictionaryEntry<RationalNumber> equ2 = new DictionaryEntry<RationalNumber>(2, 5, ring, 3);
+<<<<<<< HEAD
         equ2.setConstant(ring.fromInteger(-2));
         equ2.setConstants(new RationalNumber[]{ring.fromInteger(-1), ring.fromInteger(2)});
+=======
+        equ2.setConstant(ring.fromString("-2"));
+        equ2.setConstants(new RationalNumber[]{ring.fromString("-1"), ring.fromString("2")});
+>>>>>>> review2
         equ2.setVariables(new int[]{0, 1});
 
         //st x_0 + x_1 <= 7
         // x_3 = 7 - x_0 - x_1
         DictionaryEntry<RationalNumber> equ3 = new DictionaryEntry<RationalNumber>(2, 5, ring, 4);
+<<<<<<< HEAD
         equ3.setConstant(ring.fromInteger(7));
         equ3.setConstants(new RationalNumber[]{ring.fromInteger(-1), ring.fromInteger(-1)});
+=======
+        equ3.setConstant(ring.fromString("7"));
+        equ3.setConstants(new RationalNumber[]{ring.fromString("-1"), ring.fromString("-1")});
+>>>>>>> review2
         equ3.setVariables(new int[]{0, 1});
 
         ArrayList<DictionaryEntry<RationalNumber>> eqs = new ArrayList<DictionaryEntry<RationalNumber>>(3);
@@ -51,10 +71,17 @@ public class SimplexTest {
         org.junit.Assert.assertTrue(solution instanceof OptimalSolution);
         OptimalSolution<RationalNumber> optS = (OptimalSolution<RationalNumber>) solution;
 
+<<<<<<< HEAD
         org.junit.Assert.assertEquals(ring.fromInteger(11), optS.getValue());
 
         org.junit.Assert.assertEquals(ring.fromInteger(4), optS.getVariableValue(0));
         org.junit.Assert.assertEquals(ring.fromInteger(3), optS.getVariableValue(1));
+=======
+        org.junit.Assert.assertEquals(ring.fromString("11"), optS.getValue());
+
+        org.junit.Assert.assertEquals(ring.fromString("4"), optS.getVariableValue(0));
+        org.junit.Assert.assertEquals(ring.fromString("3"), optS.getVariableValue(1));
+>>>>>>> review2
     }
 
     @Test
@@ -63,29 +90,49 @@ public class SimplexTest {
 
         // Max 2x_0 + x_1
         LinearCombination<RationalNumber> objective = new LinearCombination<RationalNumber>(2, 5, ring);
+<<<<<<< HEAD
         objective.setConstant(ring.fromInteger(0));
         objective.setConstants(new RationalNumber[]{ring.fromInteger(2), ring.fromInteger(1)});
+=======
+        objective.setConstant(ring.fromString("0"));
+        objective.setConstants(new RationalNumber[]{ring.fromString("2"), ring.fromString("1")});
+>>>>>>> review2
         objective.setVariables(new int[]{0, 1});
 
         //st -2x_0 + x_1 <= -2
         // x_2 = -2 + 2x_0 - x_1
         DictionaryEntry<RationalNumber> equ1 = new DictionaryEntry<RationalNumber>(2, 5, ring, 2);
+<<<<<<< HEAD
         equ1.setConstant(ring.fromInteger(-2));
         equ1.setConstants(new RationalNumber[]{ring.fromInteger(2), ring.fromInteger(-1)});
+=======
+        equ1.setConstant(ring.fromString("-2"));
+        equ1.setConstants(new RationalNumber[]{ring.fromString("2"), ring.fromString("-1")});
+>>>>>>> review2
         equ1.setVariables(new int[]{0, 1});
 
         //st x_0 - 2 x_1 <= -2
         // x_3 = -2 - x_0 + 2x_1
         DictionaryEntry<RationalNumber> equ2 = new DictionaryEntry<RationalNumber>(2, 5, ring, 3);
+<<<<<<< HEAD
         equ2.setConstant(ring.fromInteger(-2));
         equ2.setConstants(new RationalNumber[]{ring.fromInteger(-1), ring.fromInteger(2)});
+=======
+        equ2.setConstant(ring.fromString("-2"));
+        equ2.setConstants(new RationalNumber[]{ring.fromString("-1"), ring.fromString("2")});
+>>>>>>> review2
         equ2.setVariables(new int[]{0, 1});
 
         //st x_0 + x_1 <= 7
         // x_3 = 7 - x_0 - x_1
         DictionaryEntry<RationalNumber> equ3 = new DictionaryEntry<RationalNumber>(2, 5, ring, 4);
+<<<<<<< HEAD
         equ3.setConstant(ring.fromInteger(7));
         equ3.setConstants(new RationalNumber[]{ring.fromInteger(-1), ring.fromInteger(-1)});
+=======
+        equ3.setConstant(ring.fromString("7"));
+        equ3.setConstants(new RationalNumber[]{ring.fromString("-1"), ring.fromString("-1")});
+>>>>>>> review2
         equ3.setVariables(new int[]{0, 1});
 
         ArrayList<DictionaryEntry<RationalNumber>> eqs = new ArrayList<DictionaryEntry<RationalNumber>>(3);
@@ -97,13 +144,22 @@ public class SimplexTest {
 
         org.junit.Assert.assertTrue(vertex instanceof OptimalSolution);
 
+<<<<<<< HEAD
         org.junit.Assert.assertEquals(ring.fromInteger(0), ((OptimalSolution) vertex).getValue());
+=======
+        org.junit.Assert.assertEquals(ring.fromString("0"), ((OptimalSolution) vertex).getValue());
+>>>>>>> review2
 
         RationalNumber v0 = ((OptimalSolution<RationalNumber>) vertex).getVariableValue(0);
         RationalNumber v1 = ((OptimalSolution<RationalNumber>) vertex).getVariableValue(1);
 
+<<<<<<< HEAD
         org.junit.Assert.assertEquals(ring.fromInteger(2), v0);
         org.junit.Assert.assertEquals(ring.fromInteger(2), v1);
+=======
+        org.junit.Assert.assertEquals(ring.fromString("2"), v0);
+        org.junit.Assert.assertEquals(ring.fromString("2"), v1);
+>>>>>>> review2
 
 
     }

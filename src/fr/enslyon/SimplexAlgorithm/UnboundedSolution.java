@@ -33,18 +33,30 @@ public class UnboundedSolution<T> implements SimplexOutput<T> {
             return solution.get(variable).get(0);
         }
         else {
+<<<<<<< HEAD
             return ring.fromInteger(0);
+=======
+            return ring.fromString("0");
+>>>>>>> review2
         }
     }
     public T getUnboundedCoefficient(int variable) {
         if(variable == enteringVariable) {
+<<<<<<< HEAD
             return ring.fromInteger(1);
+=======
+            return ring.fromString("1");
+>>>>>>> review2
         }
         else if(solution.containsKey(variable)) {
             return solution.get(variable).get(1);
         }
         else {
+<<<<<<< HEAD
             return ring.fromInteger(0);
+=======
+            return ring.fromString("0");
+>>>>>>> review2
         }
     }
 }

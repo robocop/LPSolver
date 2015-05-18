@@ -4,6 +4,7 @@ package fr.enslyon.DivisionRing;
  * Created by quentin on 14/04/15.
  */
 public class RationalNumber {
+<<<<<<< HEAD
     long a; long b;
     public RationalNumber(long a, long b) throws ArithmeticException{
         this.a = this.sign(b) * a;
@@ -21,6 +22,26 @@ public class RationalNumber {
         this.b = 1;
     }
 
+=======
+    final private long a;
+    final private long b;
+    public RationalNumber(long a, long b) throws ArithmeticException{
+        a = this.sign(b) * a;
+        b = this.sign(b) * b;
+        if(b == 0) {
+            throw new ArithmeticException();
+        }
+        long gcd = this.gcd(this.sign(a) * a, b);
+        this.a = a / gcd;
+        this.b = b / gcd;
+    }
+
+    public RationalNumber(double x) {
+        this(Math.round(100000 * x), 100000);
+    }
+
+
+>>>>>>> review2
     public long getNominator() {
         return this.a;
     }
@@ -28,15 +49,28 @@ public class RationalNumber {
         return this.b;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+>>>>>>> review2
     public String toString() {
         if(this.b > 1)
             return String.format("%d/%d", this.a, this.b);
         else
+<<<<<<< HEAD
             return String.format("%d", this.a);
     }
 
     public boolean equals(Object x) {
         if(x instanceof RationalNumber) {
+=======
+            return Long.toString(this.a);
+    }
+
+    @Override
+    public boolean equals(Object x) {
+        if(x !=  null && x instanceof RationalNumber) {
+>>>>>>> review2
             RationalNumber rx = (RationalNumber) x;
             return (a == rx.getNominator()) && (b == rx.getDenominator());
         }
@@ -62,7 +96,10 @@ public class RationalNumber {
         }
     }
 
+<<<<<<< HEAD
     public RationalNumber(double x) {
         this(Math.round(100000 * x), 100000);
     }
+=======
+>>>>>>> review2
  }

@@ -47,7 +47,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
     private void makeUniformObjective() {
         if(!linearProgram.getObjective().isObjectiveMaximize()) {
             simplexEncapsulation.setMinimizeObjective();
+<<<<<<< HEAD
             linearProgram.getObjective().getObjective().scalarMultiplication(ring.fromInteger(-1));
+=======
+            linearProgram.getObjective().getObjective().scalarMultiplication(ring.fromString("-1"));
+>>>>>>> review2
             linearProgram.getObjective().setObjectiveToMaximize();
         }
     }
@@ -55,7 +59,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
         for(int i =0; i < linearProgram.getInequalities().size(); i++) {
             Inequality<T> inequality = linearProgram.getInequalities().get(i);
             if(inequality.isGreaterInequality()) {
+<<<<<<< HEAD
                 inequality.scalarMultiplication(ring.fromInteger(-1));
+=======
+                inequality.scalarMultiplication(ring.fromString("-1"));
+>>>>>>> review2
                 inequality.setLessInequality();
             }
             inequality.makeUniformConstant();
@@ -98,7 +106,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
     private void setUpperBoundsAsInequalities(HashMap<String, T> upperBounds) {
         for(String var: upperBounds.keySet()) {
             SyntacticLinearCombination<T> l = new SyntacticLinearCombination<T>(ring);
+<<<<<<< HEAD
             l.setVariable(var, ring.fromInteger(1));
+=======
+            l.setVariable(var, ring.fromString("1"));
+>>>>>>> review2
             Inequality<T> inequality = new Inequality<T>(ring, l, false, upperBounds.get(var));
             linearProgram.getInequalities().add(inequality);
         }
@@ -114,7 +126,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
                 linearProgram.getInequalities().get(j).translateVariable(b.getVariable(), a);
             }
             variablesWithLowerBound.add(b.getVariable());
+<<<<<<< HEAD
             b.setLowerBound(ring.fromInteger(0));
+=======
+            b.setLowerBound(ring.fromString("0"));
+>>>>>>> review2
         }
 
         rewriteUnboundedVariables(variablesWithLowerBound);
@@ -137,10 +153,17 @@ public class LinearProgramToSimplexEncapsulation<T> {
                 }
 
                 Bound<T> b0 = new Bound<T>(v);
+<<<<<<< HEAD
                 b0.setLowerBound(ring.fromInteger(0));
 
                 Bound<T> b1 = new Bound<T>(nv);
                 b1.setLowerBound(ring.fromInteger(0));
+=======
+                b0.setLowerBound(ring.fromString("0"));
+
+                Bound<T> b1 = new Bound<T>(nv);
+                b1.setLowerBound(ring.fromString("0"));
+>>>>>>> review2
 
                 linearProgram.getBounds().add(b0); linearProgram.getBounds().add(b1);
             }
@@ -196,7 +219,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
 
 
         for(String var: simplexEncapsulation.getVariablesIndex().keySet()) {
+<<<<<<< HEAD
             T cst = ring.fromInteger(0);
+=======
+            T cst = ring.fromString("0");
+>>>>>>> review2
             if(combination.containsVariable(var)) {
                 cst = combination.getVariable(var);
             }
@@ -217,7 +244,11 @@ public class LinearProgramToSimplexEncapsulation<T> {
     {
 
         LinearCombination<T> l = this.convertToLinearCombination(inequality.getCombination());
+<<<<<<< HEAD
         l.scalarMultiplication(ring.fromInteger(-1));
+=======
+        l.scalarMultiplication(ring.fromString("-1"));
+>>>>>>> review2
         l.setConstant(inequality.getConstant());
         return new DictionaryEntry<T>(l, indexDictionary);
     }
